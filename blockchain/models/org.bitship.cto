@@ -51,17 +51,23 @@ participant Shipper identified by shipperId {
   --> ShipmentOrg employee
 }
 
+participant Warehouse identified by warehouseId {
+  o String warehouseId
+}
+
 /* Assets */
 
 asset Package identified by barcode {
   o String barcode
   --> Sender sender
   --> Receiver receiver
+  o Double weight
+  o Location location
 }
 
 /* Transactions */
 
-enum ShipmentStatus {
+enum SessionStatus {
   o IN_PROGRESS
   o DONE
 }
@@ -75,8 +81,14 @@ transaction ShipmentSession {
   --> ShipmentVehicle vehicle
   --> Shipper shipper
   o Package[] packages
-  o ShipmentStatus status
+  o SessionStatus status
+
   o Location location
+}
+
+transaction WarehouseSession {
+  o Package[] packages
+  o SessionStatus status
 }
 
 enum InspectionStatus {
@@ -84,11 +96,17 @@ enum InspectionStatus {
   o NOT_OK
 }
 
+enum InspectionType {
+  o CHECK_IN
+  o CHECK_OUT
+}
+
 transaction Inspection {
   --> Inspector inspector
+  --> Warehouse warehouse
+  o InspectionType type
   o String shipmentSessionId // transaction id of the inspected shipmentSession
-  o String place
-  o Location location
+  o String warehouseSessionId // transaction id of the warehouse where the inspection take place
   o InspectionStatus status
   o String note
 }
