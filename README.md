@@ -101,3 +101,9 @@ Do you need to control access to these functions based on participant types?
 Under what conditions should transactions occur?
 regulatory conditions?
 contractual agreements?
+
+## Development
+
+```bash
+composer archive create --sourceType dir --sourceName ./blockchain
+```
