@@ -82,7 +82,7 @@ rule ShipperCanCreateAndEditShipmentSession {
   participant(p): "org.bitship.Shipper"
   operation: CREATE, UPDATE
   resource(r): "org.bitship.Package"
-  transaction(tx): "org.bitship.TransferShippment"
+  transaction(tx): "org.bitship.TransferShipment"
   condition: (true)
   action: ALLOW
 }

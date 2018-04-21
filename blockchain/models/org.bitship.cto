@@ -65,7 +65,7 @@ asset ShipmentVehicle identified by shipmentVehicleId {
   o String shipmentVehicleId
   o Package[] packages
   o Location location
-  --> Shipper owner
+  --> Shipper driver
 }
 
 asset Warehouse identified by warehouseId {
@@ -76,7 +76,7 @@ asset Warehouse identified by warehouseId {
 
 /* Transactions */
 
-transaction TransferShippment {
+transaction TransferShipment {
   --> ShipmentVehicle vehicle
   --> Shipper shipper
   o Package packages
