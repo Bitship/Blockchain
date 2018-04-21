@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "",
+    "start": "composer-rest-server --card admin@bitship --namespace always --port 3000 --authentication true --multiuser true --websockets true --tls false",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
