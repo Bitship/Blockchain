@@ -18,28 +18,43 @@
  */
 
 /**
- * Sample transaction
+ * ShipmentTransfer transaction
  * @param {org.bitship.ShipmentTransfer} shipmentTransfer
  * @transaction
  */
-async function shipmentTransfer(tx) {
+async function shipmentTransfer(shipmentTransfer) {
 
+    // Package 
+    shipmentTransfer.package.location = shipmentTransfer.location;
+    shipmentTransfer.package.status = shipmentTransfer.status;
 
-    // // Save the old value of the asset.
-    // const oldValue = tx.asset.value;
+    const packageRegistry = await getAssetRegistry("org.bitship.Package");
+    await packageRegistry.update(shipmentTransfer.package);
 
-    // // Update the asset with the new value.
-    // tx.asset.value = tx.newValue;
+    // Shipment vehicle
+    switch(shipmentTransfer.status){
+        case 'CHECK_IN': 
+            shipmentTransfer.vehicle.packages.push(shipmentTransfer.package);
+            break;
+        case 'CHECK_OUT':
+            var length = shipmentTransfer.vehicle.packages.length;
+            for (var i = length - 1; i >= 0; i -= 1) {
+                if (shipmentTransfer.vehicle.packages[i].barcode === shipmentTransfer.package.barcode) {
+                    shipmentTransfer.vehicle.packages.splice(i, 1);
+                    break;
+                }
+            }
+            break;
+    }
+    shipmentTransfer.vehicle.location = shipmentTransfer.location;
+    shipmentTransfer.vehicle.driver = shipmentTransfer.shipper;
 
-    // // Get the asset registry for the asset.
-    // const assetRegistry = await getAssetRegistry('org.bitship.SampleAsset');
-    // // Update the asset in the asset registry.
-    // await assetRegistry.update(tx.asset);
+    const shipmentVehicleRegistry = await getAssetRegistry("org.bitship.ShipmentVehicle");
+    await shipmentVehicleRegistry.update(shipmentTransfer.vehicle);
 
-    // // Emit an event for the modified asset.
-    // let event = getFactory().newEvent('org.bitship', 'SampleEvent');
-    // event.asset = tx.asset;
-    // event.oldValue = oldValue;
-    // event.newValue = tx.newValue;
-    // emit(event);
+    // Emit an Event for the modified asset
+    let event = getFactory().newEvent('org.bitship', 'EmitUpdateShipmentTransfer');
+    event.package = shipmentTransfer.package;
+    event.vehicle = shipmentTransfer.vehicle;
+    event.message = "Success";
 }

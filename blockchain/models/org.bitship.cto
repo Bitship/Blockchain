@@ -9,6 +9,8 @@ enum SessionStatus {
   o CHECK_IN
   o CHECK_OUT 
   o DONE
+  o PENDING
+  o LOST
 }
 
 concept Location {
@@ -79,14 +81,14 @@ asset Warehouse identified by warehouseId {
 transaction ShipmentTransfer {
   --> ShipmentVehicle vehicle
   --> Shipper shipper
-  o Package package
+  --> Package package
   o SessionStatus status
   o Location location
 }
 
-transaction WarehouseTransfer {
-  o Package package
+transaction WarehouseTransfer { 
   o SessionStatus status
+  --> Package package
   --> Warehouse warehouse
 }
 
@@ -97,6 +99,14 @@ transaction ReportInspection {
   o String warehouseSessionId // transaction id of the warehouse where the inspection take place
   o InspectionStatus status
   o String note
+}
+
+/* Events */
+
+event EmitUpdateShipmentTransfer {
+  --> Package package
+  --> ShipmentVehicle vehicle
+  o String message
 }
 
 
