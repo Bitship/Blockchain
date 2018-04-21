@@ -1,5 +1,5 @@
 {
-  "name": "bitship-rest-server",
+  "name": "bitship-backend-rest",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
