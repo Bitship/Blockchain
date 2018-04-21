@@ -82,7 +82,7 @@ rule ShipperCanCreateAndEditShipmentSession {
   participant(p): "org.bitship.Shipper"
   operation: CREATE, UPDATE
   resource(r): "org.bitship.Package"
-  transaction(tx): "org.bitship.ShipmentSession"
+  transaction(tx): "org.bitship.TransferShippment"
   condition: (true)
   action: ALLOW
 }
@@ -92,7 +92,7 @@ rule InspectorCanCreateAndEditWarhouseSession {
   participant(p): "org.bitship.Inspector"
   operation: ALL
   resource(r): "org.bitship.Package"
-  transaction(tx): "org.bitship.WarehouseSession"
+  transaction(tx): "org.bitship.TransferWarhouse"
   condition: (true)
   action: ALLOW
 }
@@ -102,7 +102,7 @@ rule InspectorCanReadShipmentSessionInfo {
   participant(p): "org.bitship.Inspector"
   operation: READ
   resource(r): "org.bitship.ShipmentVehicle"
-  transaction(tx): "org.bitship.ShipmentSession"
+  transaction(tx): "org.bitship.ReportInspector"
   condition: (true)
   action: ALLOW
 }

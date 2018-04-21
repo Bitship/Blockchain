@@ -4,20 +4,40 @@
 
 namespace org.bitship
 
-/* Participants */
+/* Enum and concept*/
+enum SessionStatus {
+  o CHECK_IN
+  o CHECK_OUT 
+  o DONE
+}
+
+concept Location {
+  o Double lat
+  o Double lon
+}
 
 enum ParticipantType {
     o PERSONAL
     o COMPANY
 }
 
+enum InspectionStatus {
+  o OK
+  o NOT_OK
+}
+
+enum InspectionType {
+  o CHECK_IN
+  o CHECK_OUT
+}
+
+/* Participants */
 participant Customer identified by customerId {
   o String customerId
   o String firstName
   o String lastName
   o String phone
   o String address
-  o ParticipantType type
 }
 
 participant Inspector identified by inspectorId {
@@ -56,18 +76,7 @@ asset Warehouse identified by warehouseId {
 
 /* Transactions */
 
-enum SessionStatus {
-  o CHECK_IN
-  o CHECK_OUT 
-  o DONE
-}
-
-concept Location {
-  o Double lat
-  o Double lon
-}
-
-transaction ShipmentSession {
+transaction TransferShippment {
   --> ShipmentVehicle vehicle
   --> Shipper shipper
   o Package packages
@@ -75,22 +84,12 @@ transaction ShipmentSession {
   o Location location
 }
 
-transaction WarehouseSession {
+transaction TransferWarhouse {
   o Package package
   o SessionStatus status
 }
 
-enum InspectionStatus {
-  o OK
-  o NOT_OK
-}
-
-enum InspectionType {
-  o CHECK_IN
-  o CHECK_OUT
-}
-
-transaction Inspection {
+transaction ReportInspector {
   --> Inspector inspector
   --> Warehouse warehouse
   o InspectionType type
@@ -99,3 +98,5 @@ transaction Inspection {
   o InspectionStatus status
   o String note
 }
+
+
