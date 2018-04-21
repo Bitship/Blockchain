@@ -11,17 +11,8 @@ enum ParticipantType {
     o COMPANY
 }
 
-participant Sender identified by senderId {
-  o String senderId
-  o String name
-  o String email
-  o String phone
-  o String address
-  o ParticipantType type
-}
-
-participant Receiver identified by receiverId {
-  o String receiverId
+participant Customer identified by customerId {
+  o String customerId
   o String firstName
   o String lastName
   o String phone
@@ -34,41 +25,40 @@ participant Inspector identified by inspectorId {
   o String name
 }
 
-participant ShipmentOrg identified by shipmentOrgId {
-  o String shipmentOrgId
-  o String name
-}
-
-participant ShipmentVehicle identified by shipmentVehicleId {
-  o String shipmentVehicleId
-  --> ShipmentOrg owner
-}
-
 participant Shipper identified by shipperId {
   o String shipperId
   o String firstName
   o String lastName
-  --> ShipmentOrg employee
-}
-
-participant Warehouse identified by warehouseId {
-  o String warehouseId
 }
 
 /* Assets */
-
 asset Package identified by barcode {
   o String barcode
-  --> Sender sender
-  --> Receiver receiver
+  --> Customer sender
+  --> Customer receiver
   o Double weight
+  o Location location
+  o SessionStatus status
+}
+
+asset ShipmentVehicle identified by shipmentVehicleId {
+  o String shipmentVehicleId
+  o Package[] packages
+  o Location location
+  --> Shipper owner
+}
+
+asset Warehouse identified by warehouseId {
+  o String warehouseId
+  o Package[] packages
   o Location location
 }
 
 /* Transactions */
 
 enum SessionStatus {
-  o IN_PROGRESS
+  o CHECK_IN
+  o CHECK_OUT 
   o DONE
 }
 
@@ -80,14 +70,13 @@ concept Location {
 transaction ShipmentSession {
   --> ShipmentVehicle vehicle
   --> Shipper shipper
-  o Package[] packages
+  o Package packages
   o SessionStatus status
-
   o Location location
 }
 
 transaction WarehouseSession {
-  o Package[] packages
+  o Package package
   o SessionStatus status
 }
 
