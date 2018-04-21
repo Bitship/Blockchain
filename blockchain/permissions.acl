@@ -21,3 +21,88 @@ rule NetworkAdminSystem {
     resource: "org.hyperledger.composer.system.**"
     action: ALLOW
 }
+
+
+rule SenderCanCreatePackage {
+    description: "Only Sender can create a package"
+    participant(p): "org.bitship.Customer"
+    operation: CREATE
+    resource(r): "org.bitship.Package"
+    condition: ( p.getIdentifier() === r.sender.getIdentifier())
+    action: ALLOW
+}
+
+rule SenderAndReceiverCanReadPackage {
+  description: "Sender & Receiver can read package"
+  participant(p): "org.bitship.Customer"
+  operation: READ
+  resource(r): "org.bitship.Package"
+  condition: (true)
+  action: ALLOW
+}
+
+rule InspectorCanReadPackage {
+  description: "Inspector can read package"
+  participant(p): "org.bitship.Inspector"
+  operation: READ
+  resource(r): "org.bitship.Package"
+  condition: (true)
+  action: ALLOW
+}
+
+rule ShipperCanUpdateLocationAndStatusOfPackage {
+  description: "Shiiper can update location and status of package"
+  participant(p): "org.bitship.Shipper" 
+  operation: UPDATE
+  resource(r): "org.bitship.Package"
+  condition: (true)
+  action: ALLOW
+}
+
+rule ShipperCanUpdateShipperVehicleAsset {
+  description: "Shipper can update shipper vehicle asset"
+  participant(p): "org.bitship.Shipper" 
+  operation: UPDATE
+  resource(r): "org.bitship.ShipmentVehicle"
+  condition: (true)
+  action: ALLOW
+}
+
+rule InspectorCaUpdateWarHouseAsset{
+  description: "Inspector can update shipper war house asset"
+  participant(p): "org.bitship.Inspector"
+  operation: UPDATE
+  resource(r): "org.bitship.Warehouse"
+  condition: (true)
+  action: ALLOW
+}
+
+rule ShipperCanCreateAndEditShipmentSession {
+  description: "Shipper can create and edit shipper session"
+  participant(p): "org.bitship.Shipper"
+  operation: CREATE, UPDATE
+  resource(r): "org.bitship.Package"
+  transaction(tx): "org.bitship.TransferShipment"
+  condition: (true)
+  action: ALLOW
+}
+
+rule InspectorCanCreateAndEditWarhouseSession {
+  description: "Shipper can create and edit shipper session"
+  participant(p): "org.bitship.Inspector"
+  operation: ALL
+  resource(r): "org.bitship.Package"
+  transaction(tx): "org.bitship.TransferWarhouse"
+  condition: (true)
+  action: ALLOW
+}
+
+rule InspectorCanReadShipmentSessionInfo {
+  description: "Shipper can read shipment session"
+  participant(p): "org.bitship.Inspector"
+  operation: READ
+  resource(r): "org.bitship.ShipmentVehicle"
+  transaction(tx): "org.bitship.ReportInspector"
+  condition: (true)
+  action: ALLOW
+}
