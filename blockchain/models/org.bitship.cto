@@ -79,7 +79,7 @@ asset Warehouse identified by warehouseId {
 transaction ShipmentTransfer {
   --> ShipmentVehicle vehicle
   --> Shipper shipper
-  o Package packages
+  o Package package
   o SessionStatus status
   o Location location
 }
