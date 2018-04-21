@@ -19,10 +19,10 @@
 
 /**
  * Sample transaction
- * @param {org.bitship.TransferShipment} transferShipment
+ * @param {org.bitship.ShipmentTransfer} shipmentTransfer
  * @transaction
  */
-async function transferShipment(tx) {
+async function shipmentTransfer(tx) {
 
 
     // // Save the old value of the asset.

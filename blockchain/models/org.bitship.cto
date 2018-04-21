@@ -76,7 +76,7 @@ asset Warehouse identified by warehouseId {
 
 /* Transactions */
 
-transaction TransferShipment {
+transaction ShipmentTransfer {
   --> ShipmentVehicle vehicle
   --> Shipper shipper
   o Package packages
@@ -84,12 +84,12 @@ transaction TransferShipment {
   o Location location
 }
 
-transaction TransferWarhouse {
+transaction WarehouseTransfer {
   o Package package
   o SessionStatus status
 }
 
-transaction ReportInspector {
+transaction ReportInspection {
   --> Inspector inspector
   --> Warehouse warehouse
   o InspectionType type
