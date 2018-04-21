@@ -4,9 +4,8 @@
   "description": "Trusty shipment flatform built with blockchain",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/bitship.bna",
-    "pretest": "npm run lint",
     "lint": "eslint .",
-    "test": "nyc mocha -t 0 test/*.js && cucumber-js"
+    "test": "cucumber-js --fail-fast"
   },
   "author": "Tinh",
   "email": "tiengtinh@gmail.com",
