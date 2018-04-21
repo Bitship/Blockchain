@@ -101,3 +101,38 @@ Do you need to control access to these functions based on participant types?
 Under what conditions should transactions occur?
 regulatory conditions?
 contractual agreements?
+
+## Development
+
+### Blockchain network deployment
+
+First, make sure fabric development started with `./startFabric.sh` from fabric-tools
+And PeerAdmin@hlfv1 created with `./createPeerAdminCard.sh`
+
+`cd` to project root directory
+
+Deploy blockchain network:
+
+```bash
+composer archive create --sourceType dir --sourceName ./blockchain
+composer network install --card PeerAdmin@hlfv1 --archiveFile bitship\@0.0.1.bna
+composer network start --networkName bitship --networkVersion 0.0.1 --networkAdmin admin --networkAdminEnrollSecret adminpw --card PeerAdmin@hlfv1
+composer card import -f admin\@bitship.card
+composer network ping -c admin\@bitship
+```
+
+Update blockchain network:
+
+Up version in `blockchain/package.json`. Then
+
+```bash
+composer archive create --sourceType dir --sourceName ./blockchain --archiveFile bitship@0.0.2.bna
+composer network install --card PeerAdmin@hlfv1 --archiveFile bitship\@0.0.2.bna
+composer network upgrade --networkName bitship --networkVersion 0.0.2 --card PeerAdmin@hlfv1
+```
+
+### Start backend-rest server
+
+`cd backend-test`
+
+`npm start`
