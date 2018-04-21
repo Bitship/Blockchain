@@ -87,11 +87,11 @@ transaction ShipmentTransfer {
 transaction WarehouseTransfer {
   o Package package
   o SessionStatus status
+  --> Warehouse warehouse
 }
 
 transaction ReportInspection {
   --> Inspector inspector
-  --> Warehouse warehouse
   o InspectionType type
   o String shipmentSessionId // transaction id of the inspected shipmentSession
   o String warehouseSessionId // transaction id of the warehouse where the inspection take place
