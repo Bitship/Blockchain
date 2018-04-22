@@ -8,7 +8,6 @@
 - 2 Tabs:
     - pending packages
     - check-out packages (packages in warehouse)
-        - Has Dropdown select warehouse above packages list
 (1d) ShipmentVehicle's List packages. Similar to (1a) but:
 - doesn't have `Create package` button. Instead, have `Scan check-in` and `Scan deliver` link to scan page (1e)
 - Each package row doesn't have checkbox (first column)

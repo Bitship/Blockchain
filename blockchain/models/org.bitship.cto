@@ -104,4 +104,10 @@ transaction WarehouseReport { // CHECK_IN
  
 }
 
+transaction PackageHistoryQuery {
+  o String packageId
+}
 
+event PackageHistoryQueryResults {
+  o String[] results
+}
