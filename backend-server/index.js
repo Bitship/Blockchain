@@ -6,9 +6,6 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const axios = require('axios')
 
-const NetworkCardStoreManager = require('composer-common').NetworkCardStoreManager;
-const BusinessNetworkConnection = require('composer-client').BusinessNetworkConnection;
-
 let app = express();
 app.server = http.createServer(app);
 
