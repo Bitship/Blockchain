@@ -45,27 +45,31 @@ participant Inspector identified by inspectorId {
   o String name
 }
 
-participant Shipper identified by shipperId {
-  o String shipperId
-  o String firstName
-  o String lastName
-}
+// participant Shipper identified by shipperId {
+//   o String shipperId
+//   o String firstName
+//   o String lastName
+// }
 
 /* Assets */
 asset Package identified by barcode {
   o String barcode
   --> Customer sender
-  --> Customer receiver
+  // --> Customer receiver
   o Double weight
   o Location location
   o SessionStatus status
+
+  o String receiverAddress
+  o String receiverPhone
+  o String receiverName
 }
 
 asset ShipmentVehicle identified by shipmentVehicleId {
   o String shipmentVehicleId
   o Package[] packages
   o Location location
-  --> Shipper driver
+  // --> Shipper driver
 }
 
 asset Warehouse identified by warehouseId {
@@ -78,17 +82,22 @@ asset Warehouse identified by warehouseId {
 
 transaction ShipmentTransfer {
   --> ShipmentVehicle vehicle
-  --> Shipper shipper
-  o Package package
+  --> Warehouse warehouse
+  o Package[] packages
   o SessionStatus status
   o Location location
 }
 
-transaction WarehouseTransfer {
+transaction ShipmentDeliver {
   o Package package
-  o SessionStatus status
-  --> Warehouse warehouse
+  o String signature
 }
+
+// transaction WarehouseTransfer {
+//   o Package package
+//   o SessionStatus status
+//   --> Warehouse warehouse
+// }
 
 transaction ReportInspection {
   --> Inspector inspector
