@@ -21,3 +21,4 @@ API(11): get package details
 - use generated REST api
 
 API(12): get package transfer history
+http://localhost:4000/packages/1111/transfer_history

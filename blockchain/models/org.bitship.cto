@@ -97,9 +97,16 @@ transaction WarehouseReport {
   o String note
 }
 
+transaction PackageHistoryQuery {
+  o String packageId
+}
+
 /* Event */
 event ShipmentTransfered {
   o Package package
   o String message
 }
 
+event PackageHistoryQueryResults {
+  o String[] results
+}
