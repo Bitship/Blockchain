@@ -53,6 +53,8 @@ async function packageHistoryQuery(transaction) {
     const packageId = transaction.packageId
     const nativeSupport = transaction.nativeSupport;
 
+    const assetRegistry = await getAssetRegistry('org.bitship.Package')
+
     const nativeKey = getNativeAPI().createCompositeKey('Asset:org.bitship.Package', [packageId]);
     const iterator = await getNativeAPI().getHistoryForKey(nativeKey);
     let results = [];
@@ -63,7 +65,11 @@ async function packageHistoryQuery(transaction) {
         if (res && res.value && res.value.value) {
             let val = res.value.value.toString('utf8');
             if (val.length > 0) {
-                // results.push(JSON.parse(val));
+                // NOTE: this make each package responsed look like this: resource:org.bitship.Package#1111
+                // https://gyazo.com/7ebdb4e9584deea5c96aa9ae718e1a3b
+                // const pkg = JSON.parse(val)
+                // const actualPkg = await assetRegistry.get(pkg.barcode)
+                // results.push(actualPkg);
                 results.push(val);
             }
         }

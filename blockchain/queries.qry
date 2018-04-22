@@ -10,10 +10,3 @@ query selectHistorianRecordsByTrxId {
     SELECT org.hyperledger.composer.system.HistorianRecord
     WHERE (transactionId == _$transactionId)
 }
-
-query selectPackageTransferHistory {
-  description: "Select package transfer history"
-  statement:
-    SELECT org.hyperledger.composer.system.HistorianRecord
-    WHERE (transactionType == 'org.hyperledger.composer.system.AddAsset' OR transactionType == 'org.hyperledger.composer.system.UpdateAsset')
-}

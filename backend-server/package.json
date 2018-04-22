@@ -10,9 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "^1.18.2",
-    "composer-client": "../../composer/packages/composer-client",
-    "composer-common": "../../composer/packages/composer-common",
+    "composer-client": "^0.19.1",
+    "composer-common": "^0.19.1",
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "morgan": "^1.9.0"
