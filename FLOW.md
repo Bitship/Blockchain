@@ -75,8 +75,9 @@ ShipmentCompany login into (1)
 
 visit packages list page (1c)
 Click on CHECK_OUT Packages tab.
-Select warehouse from warehouse dropdown
-API(7): get all packages in selected warehouse
+<!-- Select warehouse from warehouse dropdown
+API(7): get all packages in selected warehouse -->
+API(7): get all packages with status CHECK_OUT
 
 Tick checkboxes of packages.
 Click `Assign` button to load packages into vehicle
