@@ -26,7 +26,7 @@ async function shipmentTransfer(shipmentTransfer) {
     const packageRegistry = await getAssetRegistry("org.bitship.Package");
     let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
     switch (shipmentTransfer.status) {
-        case 'CHECK_IN':
+        case 'IN_VEHICLE':
             // Update status and location for package            
             for (const packageObject of shipmentTransfer.packages) {
                 packageObject.status = shipmentTransfer.status;
@@ -74,7 +74,7 @@ async function warehouseReport(warehouseReport) {
 
     // Update status for package
     for (const packageObject of shipmentTransfer.packages) {
-        packageObject.status = "CHECK_IN";
+        packageObject.status = "IN_VEHICLE";
         await packageRegistry.update(packageObject);
         event.package = packageObject;
         event.message = "Success";

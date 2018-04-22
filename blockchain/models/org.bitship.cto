@@ -6,8 +6,8 @@ namespace org.bitship
 
 /* Enum and concept*/
 enum SessionStatus {
-  o CHECK_IN
-  o CHECK_OUT 
+  o IN_VEHICLE
+  o IN_WARHOUSE 
   o ASSIGN
   o PENDING
   o DONE
@@ -85,7 +85,7 @@ transaction ShipmentDeliver {
   o String signature
 }
 
-transaction ShipmentVehicleReport {  // CHECK_OUT by inspector
+transaction ShipmentVehicleReport {
   --> Inspector inspector
   --> ShipmentVehicle ShipmentVehicle
   --> Package[] packages
@@ -93,7 +93,7 @@ transaction ShipmentVehicleReport {  // CHECK_OUT by inspector
   o String note
 }
 
-transaction WarehouseReport { // CHECK_IN AT Warehouse
+transaction WarehouseReport {
   --> Inspector inspector
   --> Package[] packages
   --> Warehouse warehouse
