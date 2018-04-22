@@ -8,6 +8,8 @@ namespace org.bitship
 enum SessionStatus {
   o CHECK_IN
   o CHECK_OUT 
+  o ASSIGN
+  o PENDING
   o DONE
 }
 
@@ -26,10 +28,6 @@ enum InspectionStatus {
   o NOT_OK
 }
 
-enum InspectionType {
-  o CHECK_IN
-  o CHECK_OUT
-}
 
 /* Participants */
 participant Customer identified by customerId {
@@ -41,62 +39,69 @@ participant Customer identified by customerId {
 }
 
 participant Inspector identified by inspectorId {
+  --> Warehouse warehouse  
   o String inspectorId
   o String name
 }
 
-participant Shipper identified by shipperId {
-  o String shipperId
-  o String firstName
-  o String lastName
+participant ShipmentVehicle identified by shipmentVehicleId {
+  --> Package[] packages  
+  o String shipmentVehicleId
+  o Location location
+}
+
+participant Warehouse identified by warehouseId {
+  --> Package[] packages
+  o String warehouseId
+  o Location location
 }
 
 /* Assets */
 asset Package identified by barcode {
-  o String barcode
   --> Customer sender
-  --> Customer receiver
+  o String barcode
   o Double weight
   o Location location
   o SessionStatus status
-}
-
-asset ShipmentVehicle identified by shipmentVehicleId {
-  o String shipmentVehicleId
-  o Package[] packages
-  o Location location
-  --> Shipper driver
-}
-
-asset Warehouse identified by warehouseId {
-  o String warehouseId
-  o Package[] packages
-  o Location location
+  o String receiverAddress
+  o String receiverPhone
+  o String receiverName   
 }
 
 /* Transactions */
-
 transaction ShipmentTransfer {
   --> ShipmentVehicle vehicle
-  --> Shipper shipper
-  o Package package
+  --> Warehouse warehouse optional
+  --> Package[] packages
   o SessionStatus status
-  o Location location
 }
 
-transaction WarehouseTransfer {
-  o Package package
-  o SessionStatus status
-  --> Warehouse warehouse
+transaction ShipmentVehicleMove {
+  --> ShipmentVehicle vehicle
+  o Location location 
 }
 
-transaction ReportInspection {
+transaction ShipmentDeliver {
+  --> Package package
+  o String signature
+}
+
+transaction ShipmentVehicleReport {  // CHECK_OUT
   --> Inspector inspector
-  o InspectionType type
-  o String shipmentSessionId // transaction id of the inspected shipmentSession
-  o String warehouseSessionId // transaction id of the warehouse where the inspection take place
+  --> ShipmentVehicle ShipmentVehicle
+  --> Package[] packages
   o InspectionStatus status
   o String note
+  
+}
+
+transaction WarehouseReport { // CHECK_IN
+  --> Inspector inspector
+  --> Warehouse warehouse
+  --> Package[] packages
+  o InspectionStatus status
+  o String note
+ 
 }
 
 
