@@ -93,3 +93,21 @@ async function packageHistoryQuery(transaction) {
 
     return results;
 }
+
+/**
+ * shipmentVehicleMove transaction
+ * @param {org.bitship.ShipmentVehicleMove} shipmentVehicleMove
+ * @transaction
+ */
+async function shipmentVehicleMove(tx) {
+    const shipmentVehicleRegistry = await getParticipantRegistry('org.bitship.ShipmentVehicle');
+    const packageRegistry = await getAssetRegistry('org.bitship.Package');
+
+    tx.vehicle.location = tx.location
+    await shipmentVehicleRegistry.update(tx.vehicle)
+
+    for (const pkg of tx.vehicle.packages) {
+        pkg.location = tx.location
+        await packageRegistry.update(pkg)
+    }
+}
