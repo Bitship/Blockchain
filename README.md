@@ -123,13 +123,7 @@ composer network ping -c admin\@bitship
 
 Update blockchain network:
 
-Up version in `blockchain/package.json`. Then
-
-```bash
-composer archive create --sourceType dir --sourceName ./blockchain --archiveFile bitship@0.0.2.bna
-composer network install --card PeerAdmin@hlfv1 --archiveFile bitship\@0.0.2.bna
-composer network upgrade --networkName bitship --networkVersion 0.0.2 --card PeerAdmin@hlfv1
-```
+Up version in `blockchain/package.json`. Then run `./blockchain-update.sh` (require [jq](https://github.com/stedolan/jq/wiki/Installation) installed)
 
 ### Start backend-rest server
 
