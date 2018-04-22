@@ -45,13 +45,13 @@ participant Inspector identified by inspectorId {
 }
 
 participant ShipmentVehicle identified by shipmentVehicleId {
-  --> Package[] packages  
+  --> Package[] packages optional
   o String shipmentVehicleId
   o Location location
 }
 
 participant Warehouse identified by warehouseId {
-  --> Package[] packages
+  --> Package[] packages optional
   o String warehouseId
   o Location location
 }
@@ -71,7 +71,6 @@ asset Package identified by barcode {
 /* Transactions */
 transaction ShipmentTransfer {
   --> ShipmentVehicle vehicle
-  --> Warehouse warehouse optional
   --> Package[] packages
   o SessionStatus status
 }
@@ -86,22 +85,25 @@ transaction ShipmentDeliver {
   o String signature
 }
 
-transaction ShipmentVehicleReport {  // CHECK_OUT
+transaction ShipmentVehicleReport {  // CHECK_OUT by inspector
   --> Inspector inspector
   --> ShipmentVehicle ShipmentVehicle
   --> Package[] packages
   o InspectionStatus status
   o String note
-  
 }
 
-transaction WarehouseReport { // CHECK_IN
+transaction WarehouseReport { // CHECK_IN AT Warehouse
   --> Inspector inspector
-  --> Warehouse warehouse
-  --> Package[] packages
+  o Package[] packages
+  --> ShipmentVehicle shipmentVehicle
   o InspectionStatus status
   o String note
- 
 }
 
+/* Event */
+event ShipmentTransfered {
+  o Package package
+  o String message
+}
 

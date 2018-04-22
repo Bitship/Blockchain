@@ -18,43 +18,38 @@
  */
 
 /**
- * ShipmentTransfer transaction
+ * ShipmentTransfer transaction will handle three status : ASSIGN, CHECK_IN
  * @param {org.bitship.ShipmentTransfer} shipmentTransfer
  * @transaction
  */
 async function shipmentTransfer(shipmentTransfer) {
-
-    // Package 
-    shipmentTransfer.package.location = shipmentTransfer.location;
-    shipmentTransfer.package.status = shipmentTransfer.status;
-
     const packageRegistry = await getAssetRegistry("org.bitship.Package");
-    await packageRegistry.update(shipmentTransfer.package);
-
-    // Shipment vehicle
-    switch(shipmentTransfer.status){
-        case 'CHECK_IN': 
-            shipmentTransfer.vehicle.packages.push(shipmentTransfer.package);
+    let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+    switch (shipmentTransfer.status) {
+        case 'CHECK_IN':
+            // Update status and location for package            
+            shipmentTransfer.packages.forEach(async function (packageObject) {
+                packageObject.status = shipmentTransfer.status;
+                packageObject.location = shipmentTransfer.vehicle.location;
+                await packageRegistry.update(packageObject);
+                event.package = packageObject;
+                event.message = "Success";
+                emit(event);
+            });
             break;
-        case 'CHECK_OUT':
-            var length = shipmentTransfer.vehicle.packages.length;
-            for (var i = length - 1; i >= 0; i -= 1) {
-                if (shipmentTransfer.vehicle.packages[i].barcode === shipmentTransfer.package.barcode) {
-                    shipmentTransfer.vehicle.packages.splice(i, 1);
-                    break;
-                }
-            }
+        case 'ASSIGN':
+            // Add expected packages to vehicle
+            const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
+            shipmentTransfer.vehicle.packages = shipmentTransfer.vehicle.packages.concat(shipmentTransfer.packages);
+            shipmentVehicleRegistry.update(shipmentTransfer.vehicle);
+            // Update status for package
+            shipmentTransfer.packages.forEach(async function (packageObject) {
+                packageObject.status = shipmentTransfer.status;
+                await packageRegistry.update(packageObject);
+                event.package = packageObject;
+                event.message = "Success";
+                emit(event);
+            });
             break;
     }
-    shipmentTransfer.vehicle.location = shipmentTransfer.location;
-    shipmentTransfer.vehicle.driver = shipmentTransfer.shipper;
-
-    const shipmentVehicleRegistry = await getAssetRegistry("org.bitship.ShipmentVehicle");
-    await shipmentVehicleRegistry.update(shipmentTransfer.vehicle);
-
-    // Emit an Event for the modified asset
-    let event = getFactory().newEvent('org.bitship', 'EmitUpdateShipmentTransfer');
-    event.package = shipmentTransfer.package;
-    event.vehicle = shipmentTransfer.vehicle;
-    event.message = "Success";
 }
