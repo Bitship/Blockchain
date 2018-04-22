@@ -7,20 +7,16 @@ namespace org.bitship
 /* Enum and concept*/
 enum SessionStatus {
   o IN_VEHICLE
-  o IN_WARHOUSE 
+  o IN_WAREHOUSE 
   o ASSIGN
   o PENDING
   o DONE
+  o LOST
 }
 
 concept Location {
   o Double lat
   o Double lon
-}
-
-enum ParticipantType {
-    o PERSONAL
-    o COMPANY
 }
 
 enum InspectionStatus {
