@@ -1,3 +1,16 @@
+query selectHistorianRecords {
+  description: "Select all historian records"
+  statement:
+    SELECT org.hyperledger.composer.system.HistorianRecord
+}
+
+query selectHistorianRecordsByTrxId {
+  description: "Select historian records by transaction id"
+  statement:
+    SELECT org.hyperledger.composer.system.HistorianRecord
+    WHERE (transactionId == _$transactionId)
+}
+
 query selectPackageTransferHistory {
   description: "Select package transfer history"
   statement:

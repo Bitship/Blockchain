@@ -23,11 +23,14 @@ app.use('/', async (req, res) => {
         const cardStore = NetworkCardStoreManager.getCardStore();
         const conn = new BusinessNetworkConnection({cardStore})
         await conn.connect('admin@bitship')
-        console.log(util.inspect(conn))
+        
         const nativeAPI = conn.getNativeAPI()
+        console.log(conn.getNativeAPI().getChannelID())
+        console.log(util.inspect(nativeAPI))
+        console.log(Object.getOwnPropertyNames(nativeAPI))
 
-        const nativeKey = getNativeAPI().createCompositeKey('Asset:org.bitship.Package', ['9837']);
-        const iterator = await getNativeAPI().getHistoryForKey(nativeKey);
+        const nativeKey = nativeAPI.createCompositeKey('Asset:org.bitship.Package', ['9837']);
+        const iterator = await nativeAPI.getHistoryForKey(nativeKey);
 
         let results = [];
         let res = {done : false};

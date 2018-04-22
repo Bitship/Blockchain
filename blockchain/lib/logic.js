@@ -43,3 +43,47 @@ async function shipmentTransfer(tx) {
     // event.newValue = tx.newValue;
     // emit(event);
 }
+
+/**
+ * Sample transaction
+ * @param {org.bitship.PackageHistoryQuery} packageHistoryQuery
+ * @transaction
+ */
+async function packageHistoryQuery(transaction) {
+    const packageId = transaction.packageId
+    const nativeSupport = transaction.nativeSupport;
+
+    const nativeKey = getNativeAPI().createCompositeKey('Asset:org.bitship.Package', [packageId]);
+    const iterator = await getNativeAPI().getHistoryForKey(nativeKey);
+    let results = [];
+    let res = {done : false};
+    while (!res.done) {
+        res = await iterator.next();
+
+        if (res && res.value && res.value.value) {
+            let val = res.value.value.toString('utf8');
+            if (val.length > 0) {
+                // results.push(JSON.parse(val));
+                results.push(val);
+            }
+        }
+        if (res && res.done) {
+            try {
+                iterator.close();
+            }
+            catch (err) {
+            }
+        }
+    }
+
+    const event = getFactory().newEvent('org.bitship', 'PackageHistoryQueryResults');
+    /*
+    "{\"$class\":\"org.bitship.Package\",\"sender\":\"resource:org.bitship.Customer#4602\",\"barcode\":\"1111\",\"weight\":186.716,\"location\":{\"$class\":\"org.bitship.Location\",\"lat\":135.448,\"lon\":41.32},\"status\":\"CHECK_IN\",\"receiverAddress\":\"Ex ut.\",\"receiverPhone\":\"Ad.\",\"receiverName\":\"Anim non.\",\"$registryType\":\"Asset\",\"$registryId\":\"org.bitship.Package\"}",
+
+    "{\"$class\":\"org.bitship.Package\",\"sender\":\"resource:org.bitship.Customer#4602\",\"barcode\":\"1111\",\"weight\":186.716,\"location\":{\"$class\":\"org.bitship.Location\",\"lat\":135,\"lon\":41.32},\"status\":\"CHECK_IN\",\"receiverAddress\":\"Ex ut.\",\"receiverPhone\":\"Ad.\",\"receiverName\":\"Anim non.\",\"$registryType\":\"Asset\",\"$registryId\":\"org.bitship.Package\"}"
+    */
+    event.results = results
+    emit(event)
+
+    return results;
+}
