@@ -28,28 +28,71 @@ async function shipmentTransfer(shipmentTransfer) {
     switch (shipmentTransfer.status) {
         case 'CHECK_IN':
             // Update status and location for package            
-            shipmentTransfer.packages.forEach(async function (packageObject) {
+            for (const packageObject of shipmentTransfer.packages) {
                 packageObject.status = shipmentTransfer.status;
                 packageObject.location = shipmentTransfer.vehicle.location;
                 await packageRegistry.update(packageObject);
                 event.package = packageObject;
                 event.message = "Success";
                 emit(event);
-            });
+            }
             break;
+            
         case 'ASSIGN':
             // Add expected packages to vehicle
             const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
-            shipmentTransfer.vehicle.packages = shipmentTransfer.vehicle.packages.concat(shipmentTransfer.packages);
+            if (shipmentTransfer.vehicle.packages){
+                shipmentTransfer.vehicle.packages = shipmentTransfer.vehicle.packages.concat(shipmentTransfer.packages);
+            } else {
+                shipmentTransfer.vehicle.packages = shipmentTransfer.packages;
+            }
+            
             shipmentVehicleRegistry.update(shipmentTransfer.vehicle);
+
             // Update status for package
-            shipmentTransfer.packages.forEach(async function (packageObject) {
+            for (const packageObject of shipmentTransfer.packages) {
                 packageObject.status = shipmentTransfer.status;
                 await packageRegistry.update(packageObject);
                 event.package = packageObject;
                 event.message = "Success";
                 emit(event);
-            });
+            }
             break;
     }
+}
+
+
+/**
+ * ShipmentTransfer transaction will handle three status : ASSIGN, CHECK_IN
+ * @param {org.bitship.WarehouseReport} warehouseReport
+ * @transaction
+ */
+async function warehouseReport(warehouseReport) {
+
+    const packageRegistry = await getAssetRegistry("org.bitship.Package");
+    let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+
+    // Update status for package
+    for (const packageObject of shipmentTransfer.packages) {
+        packageObject.status = "CHECK_IN";
+        await packageRegistry.update(packageObject);
+        event.package = packageObject;
+        event.message = "Success";
+        emit(event);
+    }
+    
+    // Update for Warehouse 
+    const length = shipmentTransfer.warehouse.packages.length;
+    if (length == 0) return;
+
+    const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");    
+    for (let i = 0; i < shipmentTransfer.packages.length; i ++){
+        for(let j = 0; j < length; j++){
+            if (shipmentTransfer.warehouse.packages[j].barcode === shipmentTransfer.packages[i].barcode) {
+                shipmentTransfer.warehouse.packages.splice(j, 1);
+                break;
+            }
+        }
+    }
+    await warehouseRegistry.update(shipmentTransfer.warehouse);
 }

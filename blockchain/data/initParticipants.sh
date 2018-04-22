@@ -24,8 +24,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
             "lat": 3123213,
             "lon": 3213131,
             "id": "newlocation"
-        },
-        "driver": "cuongshipper1"
+        }
     }' 'http://localhost:3000/api/org.bitship.ShipmentVehicle'
 
 echo

@@ -61,7 +61,7 @@ asset Package identified by barcode {
   --> Customer sender
   o String barcode
   o Double weight
-  o Location location
+  o Location location optional
   o SessionStatus status
   o String receiverAddress
   o String receiverPhone
@@ -95,9 +95,9 @@ transaction ShipmentVehicleReport {  // CHECK_OUT by inspector
 
 transaction WarehouseReport { // CHECK_IN AT Warehouse
   --> Inspector inspector
-  o Package[] packages
+  --> Package[] packages
+  --> Warehouse warehouse
   --> ShipmentVehicle shipmentVehicle
-  o InspectionStatus status
   o String note
 }
 

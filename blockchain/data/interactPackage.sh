@@ -11,7 +11,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
       "lat": 31321,
       "lon": 312321,
       "id": "string"
-    }, \ 
+    },
     "status": "PENDING",
     "receiverAddress": "123 Cong Hoa",
     "receiverPhone": "31321313",
@@ -20,3 +20,7 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
  
  echo
  echo 
+
+
+echo "------ Shipper Company assign package for ShipmentVehicle -------"
+echo ""
