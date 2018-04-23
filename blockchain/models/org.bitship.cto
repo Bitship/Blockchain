@@ -101,6 +101,11 @@ transaction PackageHistoryQuery {
   o String packageId
 }
 
+transaction PackageLostReport {
+  --> Package package
+  --> ShipmentVehicle shipmentVehicle
+}
+
 /* Event */
 event ShipmentTransfered {
   o Package package

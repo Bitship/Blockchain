@@ -22,3 +22,6 @@ API(11): get package details
 
 API(12): get package transfer history
 http://localhost:4000/packages/1111/transfer_history
+
+
+API(13): Report Package Lost in Vehicle and WareHouse

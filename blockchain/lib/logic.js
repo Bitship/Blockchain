@@ -86,15 +86,26 @@ async function warehouseReport(warehouseReport) {
     if (length == 0) return;
 
     const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");    
-    for (let i = 0; i < shipmentTransfer.packages.length; i ++){
+    for (const packageObject of shipmentTransfer.packages){
         for(let j = 0; j < length; j++){
-            if (shipmentTransfer.warehouse.packages[j].barcode === shipmentTransfer.packages[i].barcode) {
+            if (shipmentTransfer.warehouse.packages[j].barcode === packageObject.barcode) {
                 shipmentTransfer.warehouse.packages.splice(j, 1);
                 break;
             }
         }
     }
     await warehouseRegistry.update(shipmentTransfer.warehouse);
+}
+
+/**
+ * PackageLostReport transaction
+ * @param {org.bitship.PackageLostReport} packageLostReport
+ * @transaction
+ */
+async function packageLostReport(packageLostReport){
+    packageLostReport.package.status = LOST;
+    const packageRegistry = await getAssetRegistry("org.bitship.Package");
+    packageRegistry.update(packageLostReport);
 }
 
 /**

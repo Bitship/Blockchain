@@ -7,9 +7,9 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
         "warehouseId": "warhouse1",
         "location": {
             "$class": "org.bitship.Location",
-            "lat": 0,
-            "lon": 0,
-            "id": "newlocation"
+            "lat": 10.8020702,
+            "lon": 106.6907701,
+            "id": "warhouseLocation"
         }
     }' 'http://localhost:3000/api/org.bitship.Warehouse' 
 
@@ -21,9 +21,9 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
         "shipmentVehicleId": "vehiclecompany1",
         "location": {
             "$class": "org.bitship.Location",
-            "lat": 3123213,
-            "lon": 3213131,
-            "id": "newlocation"
+            "lat": 10.802962,
+            "lon": 106.663421,
+            "id": "shipmentVehicleLocation"
         }
     }' 'http://localhost:3000/api/org.bitship.ShipmentVehicle'
 
