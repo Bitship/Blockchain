@@ -85,3 +85,7 @@ Redirect to page to take picture of receipt uploading to ipfs.
 -> Submit ShipmentDeliver transaction
 
 API(10): ShipmentDeliver transaction
+
+
+--- Lost Package : IOT Tracking
+API(13): Report Package Lost in Vehicle and WareHouse

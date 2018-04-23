@@ -6,21 +6,17 @@ namespace org.bitship
 
 /* Enum and concept*/
 enum SessionStatus {
-  o CHECK_IN
-  o CHECK_OUT 
+  o IN_VEHICLE
+  o IN_WAREHOUSE 
   o ASSIGN
   o PENDING
   o DONE
+  o LOST
 }
 
 concept Location {
   o Double lat
   o Double lon
-}
-
-enum ParticipantType {
-    o PERSONAL
-    o COMPANY
 }
 
 enum InspectionStatus {
@@ -45,13 +41,13 @@ participant Inspector identified by inspectorId {
 }
 
 participant ShipmentVehicle identified by shipmentVehicleId {
-  --> Package[] packages  
+  --> Package[] packages optional
   o String shipmentVehicleId
   o Location location
 }
 
 participant Warehouse identified by warehouseId {
-  --> Package[] packages
+  --> Package[] packages optional
   o String warehouseId
   o Location location
 }
@@ -61,7 +57,7 @@ asset Package identified by barcode {
   --> Customer sender
   o String barcode
   o Double weight
-  o Location location
+  o Location location optional
   o SessionStatus status
   o String receiverAddress
   o String receiverPhone
@@ -71,7 +67,6 @@ asset Package identified by barcode {
 /* Transactions */
 transaction ShipmentTransfer {
   --> ShipmentVehicle vehicle
-  --> Warehouse warehouse optional
   --> Package[] packages
   o SessionStatus status
 }
@@ -86,26 +81,35 @@ transaction ShipmentDeliver {
   o String signature
 }
 
-transaction ShipmentVehicleReport {  // CHECK_OUT
+transaction ShipmentVehicleReport {
   --> Inspector inspector
   --> ShipmentVehicle ShipmentVehicle
   --> Package[] packages
   o InspectionStatus status
   o String note
-  
 }
 
-transaction WarehouseReport { // CHECK_IN
+transaction WarehouseReport {
   --> Inspector inspector
-  --> Warehouse warehouse
   --> Package[] packages
-  o InspectionStatus status
+  --> Warehouse warehouse
+  --> ShipmentVehicle shipmentVehicle
   o String note
- 
 }
 
 transaction PackageHistoryQuery {
   o String packageId
+}
+
+transaction PackageLostReport {
+  --> Package package
+  --> ShipmentVehicle shipmentVehicle
+}
+
+/* Event */
+event ShipmentTransfered {
+  o Package package
+  o String message
 }
 
 event PackageHistoryQueryResults {

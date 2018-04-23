@@ -18,30 +18,94 @@
  */
 
 /**
- * Sample transaction
+ * ShipmentTransfer transaction will handle three status : ASSIGN, CHECK_IN
  * @param {org.bitship.ShipmentTransfer} shipmentTransfer
  * @transaction
  */
-async function shipmentTransfer(tx) {
+async function shipmentTransfer(shipmentTransfer) {
+    const packageRegistry = await getAssetRegistry("org.bitship.Package");
+    let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+    switch (shipmentTransfer.status) {
+        case 'IN_VEHICLE':
+            // Update status and location for package            
+            for (const packageObject of shipmentTransfer.packages) {
+                packageObject.status = shipmentTransfer.status;
+                packageObject.location = shipmentTransfer.vehicle.location;
+                await packageRegistry.update(packageObject);
+                event.package = packageObject;
+                event.message = "Success";
+                emit(event);
+            }
+            break;
+            
+        case 'ASSIGN':
+            // Add expected packages to vehicle
+            const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
+            if (shipmentTransfer.vehicle.packages){
+                shipmentTransfer.vehicle.packages = shipmentTransfer.vehicle.packages.concat(shipmentTransfer.packages);
+            } else {
+                shipmentTransfer.vehicle.packages = shipmentTransfer.packages;
+            }
+            
+            shipmentVehicleRegistry.update(shipmentTransfer.vehicle);
+
+            // Update status for package
+            for (const packageObject of shipmentTransfer.packages) {
+                packageObject.status = shipmentTransfer.status;
+                await packageRegistry.update(packageObject);
+                event.package = packageObject;
+                event.message = "Success";
+                emit(event);
+            }
+            break;
+    }
+}
 
 
-    // // Save the old value of the asset.
-    // const oldValue = tx.asset.value;
+/**
+ * ShipmentTransfer transaction will handle three status : ASSIGN, CHECK_IN
+ * @param {org.bitship.WarehouseReport} warehouseReport
+ * @transaction
+ */
+async function warehouseReport(warehouseReport) {
 
-    // // Update the asset with the new value.
-    // tx.asset.value = tx.newValue;
+    const packageRegistry = await getAssetRegistry("org.bitship.Package");
+    let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
 
-    // // Get the asset registry for the asset.
-    // const assetRegistry = await getAssetRegistry('org.bitship.SampleAsset');
-    // // Update the asset in the asset registry.
-    // await assetRegistry.update(tx.asset);
+    // Update status for package
+    for (const packageObject of shipmentTransfer.packages) {
+        packageObject.status = "IN_VEHICLE";
+        await packageRegistry.update(packageObject);
+        event.package = packageObject;
+        event.message = "Success";
+        emit(event);
+    }
+    
+    // Update for Warehouse 
+    const length = shipmentTransfer.warehouse.packages.length;
+    if (length == 0) return;
 
-    // // Emit an event for the modified asset.
-    // let event = getFactory().newEvent('org.bitship', 'SampleEvent');
-    // event.asset = tx.asset;
-    // event.oldValue = oldValue;
-    // event.newValue = tx.newValue;
-    // emit(event);
+    const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");    
+    for (const packageObject of shipmentTransfer.packages){
+        for(let j = 0; j < length; j++){
+            if (shipmentTransfer.warehouse.packages[j].barcode === packageObject.barcode) {
+                shipmentTransfer.warehouse.packages.splice(j, 1);
+                break;
+            }
+        }
+    }
+    await warehouseRegistry.update(shipmentTransfer.warehouse);
+}
+
+/**
+ * PackageLostReport transaction
+ * @param {org.bitship.PackageLostReport} packageLostReport
+ * @transaction
+ */
+async function packageLostReport(packageLostReport){
+    packageLostReport.package.status = LOST;
+    const packageRegistry = await getAssetRegistry("org.bitship.Package");
+    packageRegistry.update(packageLostReport);
 }
 
 /**
