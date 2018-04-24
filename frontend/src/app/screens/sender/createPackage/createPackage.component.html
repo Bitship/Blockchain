@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <h2 class="page-header">CREATE NEW PACKAGE</h2>
+    <form [formGroup]="myForm">
+        <br>
+
+        <div class="form-group">
+            <label for="barcode">Barcode</label>
+            <input formControlName="barcode" type="text" class="form-control" placeholder="First Name" name="barcode">
+        </div>
+
+        <div class="form-group">
+            <label for="receiverAddress">Receiver Address</label>
+            <input formControlName="receiverAddress" type="text" class="form-control" placeholder="Address" name="receiverAddress">
+        </div>
+
+        <div class="form-group">
+            <label for="receiverPhone">Receiver Phone</label>
+            <input formControlName="receiverPhone" type="text" class="form-control" placeholder="Phone" name="receiverPhone">
+        </div>
+        <div class="form-group">
+            <label>Receiver Name</label>
+            <input formControlName="receiverName" type="text" class="form-control" placeholder="Name" name="receiverName">
+        </div>
+
+        <div class="form-group">
+            <label>Weight</label>
+            <input formControlName="weight" type="number" class="form-control" placeholder="Weight" name="Weight">
+        </div>
+        <button (click)="addAsset(myForm);" type="submit" class="btn btn-success" data-dismiss="modal">Confirm</button>
+    </form>
+</div>
