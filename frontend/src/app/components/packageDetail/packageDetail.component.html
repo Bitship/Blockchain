@@ -1,9 +1,9 @@
 <div class="container-fluid">
     <h2 class="page-header">PACKAGE DETAIL (SENDER & RECEIVER)</h2>
-    <div style="padding: 10px">
-      <p>Barcode: ...</p>
-      <p>Package Sender Information: ...</p>
-      <p>Package Receiver Information: ...</p>
+    <div style="padding: 10px" *ngIf="package">
+      <p>Barcode: {{package.barcode}}</p>
+      <p>Package Sender Information: {{ sender.firstName }} {{ sender.lastName }}</p>
+      <p>Package Receiver Information: {{ package.receiverName }}</p>
     </div>
     <div style="float: right">
       <label>Only Receiver</label>

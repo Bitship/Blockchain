@@ -8,7 +8,7 @@ import { PackageDetailComponent } from './components/packageDetail/packageDetail
 const routesConfig: Routes = [
     { path: 'sender/package/create', component: CreatePackageComponent},
     { path: 'sender/packages', component: ShowPackagesComponent},
-    { path: 'packageDetail', component: PackageDetailComponent}
+    { path: 'packages/:id', component: PackageDetailComponent}
 ];
 
 @NgModule({
