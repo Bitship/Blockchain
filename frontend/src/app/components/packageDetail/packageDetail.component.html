@@ -1,9 +1,11 @@
 <div class="container-fluid">
     <h2 class="page-header">PACKAGE DETAIL (SENDER & RECEIVER)</h2>
-    <div style="padding: 10px">
-      <p>Barcode: ...</p>
-      <p>Package Sender Information: ...</p>
-      <p>Package Receiver Information: ...</p>
+    <div style="padding: 10px" *ngIf="package && sender">
+      <p>Barcode: {{package.barcode}}</p>
+      <p>Weight: {{package.weight}}</p>
+      <p>Package Sender Name: {{ sender.firstName }} {{ sender.lastName }}</p>
+      <p>Package Receiver Name: {{ package.receiverName }}</p>
+      <p>Package Receiver Address: {{ package.receiverAddress }}</p>
     </div>
     <div style="float: right">
       <label>Only Receiver</label>
@@ -36,56 +38,22 @@
               <th>Location</th>
               <th>Shipper Name</th>
               <th>Warehouse</th>
-              <th>Weight</th>
             </tr>
           </thead>
   
-          <tbody>
-            <tr>
-              <th scope="row" class="pr-md-3 pr-5">
-                <input type="checkbox" class="filled-in" id="checkbox124">
-                <label for="checkbox124" class="label-table"></label>
-              </th>
-              <td>CHECK IN</td>
-              <td>0x0demoBC5sHap</td>
-              <td>TAM</td>
-              <td>......</td>
-              <td>8 KG</td>
-            </tr>
-            <tr>
-              <th scope="row" class="pr-md-3 pr-5">
-                <input type="checkbox" class="filled-in" id="checkbox125">
-                <label for="checkbox125" class="label-table"></label>
-              </th>
-              <td>CHECK OUT</td>
-              <td>0x0demoBC5sHap</td>
-              <td>TAM</td>
-              <td>Kho Van Chuyen</td>
-              <td>8 KG</td>
-            </tr>
-            <tr>
-              <th scope="row" class="pr-md-3 pr-5">
-                <input type="checkbox" class="filled-in" id="checkbox126">
-                <label for="checkbox126" class="label-table"></label>
-              </th>
-              <td>CHECK IN</td>
-              <td>0x0demoBC5sHap</td>
-              <td>TINH</td>
-              <td>NHA XUONG ABC</td>
-              <td>8 KG</td>
-            </tr>
-            <tr>
-              <th scope="row" class="pr-md-3 pr-5">
-                <input type="checkbox" class="filled-in" id="checkbox126">
-                <label for="checkbox126" class="label-table"></label>
-              </th>
-              <td>CHECK OUT</td>
-              <td>0x0demoBC5sHap</td>
-              <td>TINH</td>
-              <td>NHA XUONG ABC</td>
-              <td>8 KG</td>
-            </tr>
-  
+          <tbody *ngIf="history">
+            <ng-container *ngFor="let pkg of history">
+              <tr>
+                <th scope="row" class="pr-md-3 pr-5">
+                  <input type="checkbox" class="filled-in" id="{{ pkg.barcode }}">
+                  <label for="{{ pkg.barcode }}" class="label-table"></label>
+                </th>
+                <td>{{ pkg.status }}</td>
+                <td>{{ pkg.location.lat }} - {{ pkg.location.lon }}</td>
+                <td>{{ pkg.vehicle | slice:37 }}</td>
+                <td>{{ pkg.warehouse | slice:31 }}</td>
+              </tr>
+            </ng-container>
           </tbody>
         </table>
       </div>

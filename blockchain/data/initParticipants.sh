@@ -13,12 +13,25 @@ curl -X POST --header 'Content-Type: application/json' --header 'Accept: applica
         }
     }' 'http://localhost:3000/api/org.bitship.Warehouse' 
 
+echo
+echo "------Create ShipmentCompany -------"
+echo
+curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
+        "$class": "org.bitship.ShipmentCompany",
+        "shipmentCompanyId": "no1Delivery",
+        "name": "No 1 Delivery"
+    }' 'http://localhost:3000/api/org.bitship.ShipmentCompany'
+
+echo
+echo
+
 echo "------Create Shipper Vehicle -------"
 echo "Create First Shipment Vehicle"
 echo
 curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
         "$class": "org.bitship.ShipmentVehicle",
-        "shipmentVehicleId": "vehiclecompany1",
+        "shipmentVehicleId": "toyotaTruck",
+        "shipmentCompany": "no1Delivery",
         "location": {
             "$class": "org.bitship.Location",
             "lat": 10.802962,

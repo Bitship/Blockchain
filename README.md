@@ -130,3 +130,29 @@ Up version in `blockchain/package.json`. Then run `./blockchain-update.sh` (requ
 `cd backend-test`
 
 `npm start`
+
+### Init sample data
+
+```bash
+./blockchain/data/initParticipants.sh \
+&& ./blockchain/data/interactPackage.sh
+```
+
+### Clean up
+
+Clean up fabric-tools:
+
+```bash
+./teardownFabric.sh \
+&& ./teardownAllDocker.sh \
+&& docker rmi $(docker images dev-* -q)
+```
+
+```bash
+echo "Stoping all container"
+docker stop $(docker ps -a -q)
+echo "Remove all suspended container"
+docker rm $(docker ps -a -q)
+echo "Remove all dev-* docker-images"
+docker rmi $(docker images dev-* -q)
+```
