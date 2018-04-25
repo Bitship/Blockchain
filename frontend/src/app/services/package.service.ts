@@ -13,4 +13,16 @@ export class PackageService {
     public addAsset(itemToAdd: any): Observable<Package> {
         return this.dataService.add(this.NAMESPACE, itemToAdd);
     }
+
+    public getAssetsBySender(senderId: string): Observable<Package[]> {
+        const stringObjectWhere = `{"where": { "sender": "resource:org.bitship.Customer#${senderId}"}}`
+        const encodeObject = encodeURIComponent(stringObjectWhere);
+        return this.dataService.getObjectsByFilter(this.NAMESPACE, encodeObject);
+    }
+
+    public getAssetsWithStatus(status: string):  Observable<Package[]> {
+        const stringObjectWhere = `{"where": { "status": "${status}"}}`
+        const encodeObject = encodeURIComponent(stringObjectWhere);
+        return this.dataService.getObjectsByFilter(this.NAMESPACE, encodeObject);
+    }
 }
