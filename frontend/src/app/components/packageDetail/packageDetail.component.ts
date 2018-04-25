@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PackageDetailService } from './packageDetail.service';
 import { ActivatedRoute } from '@angular/router';
 import { Package } from '../../org.bitship';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 @Component({
   selector: 'app-packageDetail',
@@ -16,6 +17,7 @@ export class PackageDetailComponent implements OnInit, OnDestroy {
 
   private package: any
   private sender: any
+  private history: any
 
   constructor(
     private route: ActivatedRoute,
@@ -36,11 +38,20 @@ export class PackageDetailComponent implements OnInit, OnDestroy {
       }),
       mergeMap((pkg) => {
         const senderId = pkg.sender.split('#')[1]
-        return this.service.getSingleCustomer(senderId)
+        return forkJoin([
+          this.service.getSingleCustomer(senderId),
+          this.service.getHistory(pkg.barcode)
+        ])
       })
-    ).subscribe((sender: any) => {
-      console.log('sender: ', sender)
-      this.sender = sender
+    ).pipe(
+      tap(([sender, history]) => {
+        console.log('sender: ', sender)
+        console.log('history: ', history)
+        this.sender = sender
+        this.history = history
+        return this.sender
+      }),
+    ).subscribe(() => {
     })
   }
 
