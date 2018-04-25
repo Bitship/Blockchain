@@ -40,7 +40,13 @@ participant Inspector identified by inspectorId {
   o String name
 }
 
+participant ShipmentCompany identified by shipmentCompanyId {
+  o String shipmentCompanyId
+  o String name
+}
+
 participant ShipmentVehicle identified by shipmentVehicleId {
+  --> ShipmentCompany shipmentCompany
   --> Package[] packages optional
   o String shipmentVehicleId
   o Location location
@@ -61,7 +67,9 @@ asset Package identified by barcode {
   o SessionStatus status
   o String receiverAddress
   o String receiverPhone
-  o String receiverName   
+  o String receiverName
+  --> ShipmentVehicle vehicle optional
+  --> Warehouse warehouse optional
 }
 
 /* Transactions */
