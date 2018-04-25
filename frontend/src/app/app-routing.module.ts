@@ -4,11 +4,40 @@ import { Routes, RouterModule } from '@angular/router';
 import { CreatePackageComponent } from './screens/sender/createPackage/createPackage.component';
 import { ShowPackagesComponent } from './screens/sender/packages/showPackages.component';
 import { PackageDetailComponent } from './components/packageDetail/packageDetail.component';
+import { CompanyPackagesComponent } from './screens/shipmentCompany/packages/companyPackages.component';
+import { VehiclePackagesComponent } from './screens/shipmentVehicle/packages/vehiclePackages.component';
+import { InspectorPackagesComponent } from './screens/inspector/inspectorPackages/inspectorPackages.component';
 
 const routesConfig: Routes = [
-    { path: 'sender/package/create', component: CreatePackageComponent},
-    { path: 'sender/packages', component: ShowPackagesComponent},
-    { path: 'packages/:id', component: PackageDetailComponent}
+    {
+        path: 'sender',
+        children: [
+            { path: '', component: ShowPackagesComponent },
+            { path: 'create', component: CreatePackageComponent },
+            { path: 'package/:id', component: PackageDetailComponent}
+        ]
+    },
+    {
+        path: 'shipmentCompany',
+        children: [
+            { path: '', component: CompanyPackagesComponent },
+            { path: 'package/:id', component: PackageDetailComponent}
+        ]
+    },
+    {
+        path: 'shipmentVehicle',
+        children: [
+            { path: '', component: VehiclePackagesComponent },
+            { path: 'packages/:id', component: PackageDetailComponent}
+        ]
+    },
+    {
+        path: 'inspector',
+        children: [
+            { path: '', component: InspectorPackagesComponent},
+            { path: 'packages/:id', component: PackageDetailComponent}
+        ]
+    }
 ];
 
 @NgModule({
@@ -17,5 +46,5 @@ const routesConfig: Routes = [
     providers: []
 })
 
-export class AppRoutingModule {}
+export class AppRoutingModule { }
 

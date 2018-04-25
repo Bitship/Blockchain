@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { PackageService } from '../../../services/package.service';
 import { Router } from '@angular/router';
 
+
 @Component({
-    selector: 'app-showPackages',
-    templateUrl: './showPackages.component.html',
-    styleUrls: ['./showPackages.component.css'],
+    selector: 'app-viewPackages',
+    templateUrl: './companyPackages.component.html',
+    styleUrls: ['./companyPackages.component.css'],
     providers: [PackageService]
 })
-export class ShowPackagesComponent implements OnInit {
+export class CompanyPackagesComponent implements OnInit {
     private packages;
     private errorMessage;
 
@@ -16,12 +17,12 @@ export class ShowPackagesComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.loadAll();
+        this.loadPendingPackages();
     }
 
-    loadAll(): Promise<any> {
+    loadPendingPackages(): Promise<any> {
         let tempList = [];
-        return this.packageService.getAssetsBySender('thang1')
+        return this.packageService.getAssetsWithStatus('PENDING')
             .toPromise()
             .then((result) => {
                 this.errorMessage = null;
