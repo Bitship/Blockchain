@@ -91,7 +91,7 @@ transaction ShipmentDeliver {
 
 transaction ShipmentVehicleReport {
   --> Inspector inspector
-  --> ShipmentVehicle ShipmentVehicle
+  --> ShipmentVehicle vehicle
   --> Package[] packages
   o InspectionStatus status
   o String note
