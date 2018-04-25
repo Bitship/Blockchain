@@ -4,16 +4,21 @@ import { PackageDetailService } from './packageDetail.service';
 import { ActivatedRoute } from '@angular/router';
 import { Package } from '../../org.bitship';
 import { forkJoin } from 'rxjs/observable/forkJoin';
+import { WebsocketService } from './websocket.service';
 
 @Component({
   selector: 'app-packageDetail',
   templateUrl: './packageDetail.component.html',
   styleUrls: ['./packageDetail.component.css'],
-  providers: [PackageDetailService],
+  providers: [
+    PackageDetailService,
+    WebsocketService,
+  ],
 })
 export class PackageDetailComponent implements OnInit, OnDestroy {
 
   private sub: any;
+  private sub2: any;
 
   private package: any
   private sender: any
@@ -52,9 +57,14 @@ export class PackageDetailComponent implements OnInit, OnDestroy {
       }),
     ).subscribe(() => {
     })
+
+    this.sub2 = this.service.watchHistory().subscribe((history) => {
+      console.log('watchHistoty: ', history)
+    })
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.sub2.unsubscribe();
   }
 }

@@ -173,5 +173,10 @@ async function shipmentVehicleMove(tx) {
     for (const pkg of tx.vehicle.packages) {
         pkg.location = tx.location
         await packageRegistry.update(pkg)
+
+        const event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+        event.package = pkg
+        event.message = 'Moved'
+        emit(event)
     }
 }
