@@ -10,13 +10,19 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CreatePackageComponent } from './screens/sender/createPackage/createPackage.component';
 import { ShowPackagesComponent } from './screens/sender/packages/showPackages.component';
 import { PackageDetailComponent } from './components/packageDetail/packageDetail.component';
+import { CompanyPackagesComponent} from './screens/shipmentCompany/packages/companyPackages.component';
+import { VehiclePackagesComponent } from './screens/shipmentVehicle/packages/vehiclePackages.component';
+import { InspectorPackagesComponent } from './screens/inspector/inspectorPackages/inspectorPackages.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CreatePackageComponent,
     ShowPackagesComponent,
-    PackageDetailComponent
+    PackageDetailComponent,
+    CompanyPackagesComponent,
+    VehiclePackagesComponent,
+    InspectorPackagesComponent
   ],
   imports: [
     BrowserModule,

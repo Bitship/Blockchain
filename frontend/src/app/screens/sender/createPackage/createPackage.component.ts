@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { PackageService } from '../../../services/package.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-createPackage',
@@ -19,7 +20,7 @@ export class CreatePackageComponent implements OnInit {
     receiverName = new FormControl("", Validators.required);
     weight = new FormControl("", Validators.required);
 
-    constructor(private packageService: PackageService, fb: FormBuilder) {
+    constructor(private packageService: PackageService, fb: FormBuilder, private location: Location) {
         this.myForm = fb.group({
             barcode: this.barcode,
             receiverAddress: this.receiverAddress,
@@ -34,7 +35,7 @@ export class CreatePackageComponent implements OnInit {
     addAsset(form: any): Promise<any> {
         this.asset = {
             $class: "org.bitship.Package",
-            "sender": "tam1",
+            "sender": "thang1",
             "barcode": this.barcode.value,
             "weight": this.weight.value,
             "status": "PENDING",
@@ -44,8 +45,11 @@ export class CreatePackageComponent implements OnInit {
         }
         return this.packageService.addAsset(this.asset)
             .toPromise()
-            .catch((error) => {
-                console.error(error);
-            });
+            .then((result) => {
+                this.location.back();
+            })
+            .catch ((error) => {
+            console.error(error);
+        });
     }
 }
