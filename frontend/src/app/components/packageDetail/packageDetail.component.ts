@@ -58,8 +58,13 @@ export class PackageDetailComponent implements OnInit, OnDestroy {
     ).subscribe(() => {
     })
 
-    this.sub2 = this.service.watchHistory().subscribe((history) => {
-      console.log('watchHistoty: ', history)
+    this.sub2 = this.service.watchHistory().subscribe((pkg: any) => {
+      console.log('watchHistoty: ', pkg)
+      if (!this.history) {
+        return
+      }
+
+      this.history.push(pkg)
     })
   }
 

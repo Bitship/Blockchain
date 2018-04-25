@@ -40,10 +40,10 @@ export class PackageDetailService {
             .connect(WS_URL)
             .map((response: MessageEvent): any => {
                 const data = JSON.parse(response.data)
-                console.log('response.data', data)
                 return data
             })
-            .filter((data) => data.$class === 'org.bitship.ShipmentTransfered');
+            .filter((data) => data.$class === 'org.bitship.ShipmentTransfered')
+            .map(data => data.package)
     }
 
     private handleError(error: any): Observable<string> {
