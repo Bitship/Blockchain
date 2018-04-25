@@ -7,14 +7,14 @@
         <div class="input-group col-md-12">
           <input type="text" class="form-control input-lg" placeholder="Search Package Id" />
           <span class="input-group-btn">
-            <button class="btn btn-info btn-lg" type="button">
-              <i class="glyphicon glyphicon-search"></i>
-            </button>
           </span>
         </div>
       </div>
     </div>
-    <button [routerLink]="['create']" type="submit" class="btn btn-success" style="float: right">Create New Package</button>
+    <select>
+      <option value="toyotaTruck">toyotaTruck</option>
+    </select>
+    <button (click)="submitShipmentTransfer();" type="submit" class="btn btn-success" style="float: right">ASSIGN</button>
   </div>
 
   <br>
@@ -41,8 +41,8 @@
     <tbody>
       <tr *ngFor="let package of packages">
         <th scope="row" class="pr-md-3 pr-5">
-          <input type="checkbox" class="filled-in" id="checkbox124">
-          <label for="checkbox124" class="label-table"></label>
+          <button (click)="addPackages(package.barcode);"  class="btn btn-success" style="float: right">Add</button>
+          <button  (click)="removePackages(package.barcode);" class="btn btn-success" style="float: right">Remove</button>
         </th>
         <td>{{package.barcode}}</td>
         <td>{{package.status}}</td>

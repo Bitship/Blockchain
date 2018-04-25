@@ -50,11 +50,14 @@ export class Inspector extends Participant {
     name: string;
 }
 export class ShipmentVehicle extends Participant {
-    pacakges: Package[];
+    packages: Package[];
     shipmentVehicleId: string;
     location: Location;
 }
 
+export class PackageBarcode {
+    barcode: string;
+}
 // Transaction
 export class ShipmentTransfer extends Transaction {
     vehicle: ShipmentVehicle;
