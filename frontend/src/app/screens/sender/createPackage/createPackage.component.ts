@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { CreatePackageService } from './createPackage.service';
+import { PackageService } from '../../../services/package.service';
 
 @Component({
     selector: 'app-createPackage',
     templateUrl: './createPackage.component.html',
     styleUrls: ['./createPackage.component.css'],
-    providers: [CreatePackageService]
+    providers: [PackageService]
 })
 export class CreatePackageComponent implements OnInit {
 
@@ -19,7 +19,7 @@ export class CreatePackageComponent implements OnInit {
     receiverName = new FormControl("", Validators.required);
     weight = new FormControl("", Validators.required);
 
-    constructor(private serviceSampleAsset: CreatePackageService, fb: FormBuilder) {
+    constructor(private packageService: PackageService, fb: FormBuilder) {
         this.myForm = fb.group({
             barcode: this.barcode,
             receiverAddress: this.receiverAddress,
@@ -42,7 +42,7 @@ export class CreatePackageComponent implements OnInit {
             "receiverPhone": this.receiverPhone.value,
             "receiverName": this.receiverName.value
         }
-        return this.serviceSampleAsset.addAsset(this.asset)
+        return this.packageService.addAsset(this.asset)
             .toPromise()
             .catch((error) => {
                 console.error(error);

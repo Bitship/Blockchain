@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { DataService } from '../../../data.service';
+import { DataService } from '../data.service';
+import { Package } from '../org.bitship';
 import { Observable } from 'rxjs/Observable';
-import { Package } from '../../../org.bitship';
 import 'rxjs/Rx';
 
 @Injectable()
-export class CreatePackageService {
+export class PackageService {
     private NAMESPACE: string = 'org.bitship.Package';
     constructor(private dataService: DataService<Package>) {
     };
