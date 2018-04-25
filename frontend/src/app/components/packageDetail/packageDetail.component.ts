@@ -27,7 +27,6 @@ export class PackageDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.route.params.pipe(
       mergeMap((params) => {
-        console.log('params', params)
         return this.service.getSingle(params.id)
       })
     ).pipe(
