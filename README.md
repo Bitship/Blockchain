@@ -146,13 +146,7 @@ Clean up fabric-tools:
 ./teardownFabric.sh \
 && ./teardownAllDocker.sh \
 && docker rmi $(docker images dev-* -q)
-```
 
-```bash
-echo "Stoping all container"
-docker stop $(docker ps -a -q)
-echo "Remove all suspended container"
-docker rm $(docker ps -a -q)
-echo "Remove all dev-* docker-images"
-docker rmi $(docker images dev-* -q)
+# or
+./blockchain-clear.sh
 ```
