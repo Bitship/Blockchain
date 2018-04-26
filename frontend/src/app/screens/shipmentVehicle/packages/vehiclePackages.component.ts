@@ -3,19 +3,22 @@ import { PackageService } from '../../../services/package.service';
 import { Router } from '@angular/router';
 import { ShipmentVehicleService } from '../../../services/shipmentVehicle.service';
 import { PackageBarcode } from '../../../org.bitship';
+import { ShipmentTransferService } from '../../../services/shipmentTransfer.service';
 
 @Component({
     selector: 'app-showPackages',
     templateUrl: './vehiclePackages.component.html',
     styleUrls: ['./vehiclePackages.component.css'],
-    providers: [PackageService, ShipmentVehicleService]
+    providers: [PackageService, ShipmentVehicleService, ShipmentTransferService]
 })
 export class VehiclePackagesComponent implements OnInit {
     private packagesBarcode;
     private errorMessage;
     private packages;
-
-    constructor(private packageService: PackageService, private shipmentVehicleService: ShipmentVehicleService, private router: Router) {
+    private shipmentTransfer;
+    private scanedPackages: Array<string> = [];
+    constructor(private packageService: PackageService, private shipmentVehicleService: ShipmentVehicleService,
+        private shipmentTransferService: ShipmentTransferService) {
     }
 
     ngOnInit() {
@@ -47,6 +50,33 @@ export class VehiclePackagesComponent implements OnInit {
             })
             .catch((error) => {
             });
+    }
+
+    submitShipmentTransfer(): Promise<any> {
+        this.shipmentTransfer = {
+            "$class": "org.bitship.ShipmentTransfer",
+            "vehicle": 'toyotaTruck',
+            "packages": this.scanedPackages,
+            "status": "IN_VEHICLE"
+        }
+
+        return this.shipmentTransferService
+            .postShipmentTransaction(this.shipmentTransfer)
+            .toPromise()
+            .then((result) => {
+                this.loadPackagesOfShipmentVehicle();
+                this.scanedPackages = [];
+            })
+            .catch ((error) => {
+                console.error(error);
+            });
+    }
+
+    onScannedPackages(barcodes: Array<string>) {
+        console.log('Barcode ddad a: ', barcodes.length);
+        this.scanedPackages.splice(0, this.scanedPackages.length);
+        this.scanedPackages = this.scanedPackages.concat(barcodes);
+        console.log('Barcode ddad a: ', JSON.stringify(this.scanedPackages[1]));
     }
 }
 

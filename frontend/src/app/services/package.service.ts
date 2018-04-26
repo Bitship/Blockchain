@@ -27,7 +27,13 @@ export class PackageService {
     }
 
     public getPackagesByArrays(packages: Array<PackageBarcode>): Observable<Package[]> {
-        const queryObject = `{"where":{"or": ${JSON.stringify(packages)}}}`;
+        let queryObject;
+        if (packages.length === 1) {
+            console.log(JSON.stringify(packages[0]));
+            queryObject = `{"where":${JSON.stringify(packages[0])}}`;
+        } else {
+            queryObject = `{"where":{"or": ${JSON.stringify(packages)}}}`;
+        }
         const encodeObject = encodeURIComponent(queryObject);
         return this.dataService.getObjectsByFilter(this.NAMESPACE_PACKAGE_ASSET, encodeObject);
     }

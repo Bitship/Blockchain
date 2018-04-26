@@ -1,6 +1,7 @@
 <!-- Search -->
 <h2 class="page-header">Shipment Vehicle ToyotaTruck</h2>
 <div class="container-fluid" style="padding-top: 50px">
+
   <div class="row" style="padding: 10px">
     <div class="col-md-6">
       <div id="packageid-search-input">
@@ -9,9 +10,10 @@
         </div>
       </div>
     </div>
-    <button [routerLink]="['create']" type="submit" class="btn btn-success" style="float: right">Scan barcode</button>
+    <button [routerLink]="['create']" type="submit" class="btn btn-success" style="float: right">SCAN</button>
+    <button  (click)="submitShipmentTransfer()" type="submit" class="btn btn-success" style="float: right">Submit report</button>
   </div>
-
+  <scan-qr-code (onScanPackages)="onScannedPackages($event)"></scan-qr-code>
   <br>
   <!--Table-->
   <table class="table table-bordered table-responsive-md">
