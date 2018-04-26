@@ -111,10 +111,11 @@ async function shipmentVehicleReport(shipmentVehicleReport) {
     })
 
     // remove packages that we added to warehouse from vehicle
-    for (const packageObject of shipmentVehicleReport.inspector.warehouse.packages) {
+    for (const packageObject of shipmentVehicleReport.packages) {
         for(let j = 0; j < shipmentVehicleReport.vehicle.packages.length; j++) {
             if (packageObject.barcode == shipmentVehicleReport.vehicle.packages[j].barcode) {
                 shipmentVehicleReport.vehicle.packages.splice(j, 1);
+                break;
             }
         }
     }
@@ -136,6 +137,8 @@ async function warehouseReport(warehouseReport) {
     // Update status for package
     for (const packageObject of warehouseReport.packages) {
         packageObject.status = "IN_VEHICLE";
+        packageObject.warehouse = null;
+        packageObject.vehicle = warehouseReport.vehicle;
         await packageRegistry.update(packageObject);
         event.package = packageObject;
         event.message = "Success";
@@ -143,19 +146,38 @@ async function warehouseReport(warehouseReport) {
     }
 
     // Update for Warehouse
-    const length = warehouseReport.warehouse.packages.length;
+    const length = warehouseReport.packages.length;
     if (length == 0) return;
 
+    const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
     const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");
-    for (const packageObject of warehouseReport.packages){
+
+    // add packages to vehicle
+    warehouseReport.packages.forEach((packageObject, i) => {
         for(let j = 0; j < length; j++){
-            if (warehouseReport.warehouse.packages[j].barcode === packageObject.barcode) {
-                warehouseReport.warehouse.packages.splice(j, 1);
+            if (warehouseReport.packages[j].barcode === packageObject.barcode) {
+                if (warehouseReport.vehicle.packages) {
+                    warehouseReport.vehicle.packages = warehouseReport.vehicle.packages.concat(packageObject);
+                } else {
+                    warehouseReport.vehicle.packages = [];
+                    warehouseReport.vehicle.packages.push(packageObject);
+                }
+            }
+        }
+    })
+
+    // remove packages from warehouse
+    for (const packageObject of warehouseReport.packages) {
+        for(let j = 0; j < warehouseReport.inspector.warehouse.packages.length; j++) {
+            if (packageObject.barcode == warehouseReport.inspector.warehouse.packages[j].barcode) {
+                warehouseReport.inspector.warehouse.packages.splice(j, 1);
                 break;
             }
         }
     }
-    await warehouseRegistry.update(warehouseReport.warehouse);
+
+    await shipmentVehicleRegistry.update(warehouseReport.vehicle)
+    await warehouseRegistry.update(warehouseReport.inspector.warehouse);
 }
 
 /**

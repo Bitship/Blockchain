@@ -100,8 +100,7 @@ transaction ShipmentVehicleReport {
 transaction WarehouseReport {
   --> Inspector inspector
   --> Package[] packages
-  --> Warehouse warehouse
-  --> ShipmentVehicle shipmentVehicle
+  --> ShipmentVehicle vehicle
   o String note
 }
 
