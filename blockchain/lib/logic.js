@@ -52,6 +52,7 @@ async function shipmentTransfer(shipmentTransfer) {
             // Update status for package
             for (const packageObject of shipmentTransfer.packages) {
                 packageObject.status = shipmentTransfer.status;
+                packageObject.vehicle = shipmentTransfer.vehicle;
                 await packageRegistry.update(packageObject);
                 event.package = packageObject;
                 event.message = "Success";

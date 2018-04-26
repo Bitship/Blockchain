@@ -1,0 +1,56 @@
+<!-- Search -->
+<h2 class="page-header">Shipment Company</h2>
+<div class="container-fluid" style="padding-top: 50px">
+  <div class="row" style="padding: 10px">
+    <div class="col-md-6">
+      <div id="packageid-search-input">
+        <form [formGroup]="myForm">
+          <div class="input-group col-md-12">
+            <input type="text" class="form-control input-lg" placeholder="Shipment Vehicle" formControlName="vehicleId" />
+            
+          </div>
+        </form>
+
+      </div>
+    </div>
+    <button (click)="searchVehicleId()">Search</button>
+    <button (click)="submitShipmentTransfer();" type="submit" class="btn btn-success" style="float: right">REPORT</button>
+  </div>
+
+  <br>
+  <!--Table-->
+  <table class="table table-bordered table-responsive-md">
+
+    <!--Table head-->
+    <thead>
+      <tr>
+        <th class="pr-md-3 pr-5">
+          <input type="checkbox" class="filled-in" id="checkbox123">
+          <label for="checkbox123" class="label-table"></label>
+        </th>
+        <th>Package Id</th>
+        <th>Status</th>
+        <th>Weight</th>
+        <th>Receiver Name</th>
+        <th>Receiver Address</th>
+      </tr>
+    </thead>
+    <!--Table head-->
+
+    <!--Table body-->
+    <tbody>
+      <tr *ngFor="let package of packages">
+        <th scope="row" class="pr-md-3 pr-5">
+        </th>
+        <td>{{package.barcode}}</td>
+        <td>{{package.status}}</td>
+        <td>{{package.weight}} KG</td>
+        <td>{{package.receiverName}}</td>
+        <td>{{package.receiverAddress}}</td>
+      </tr>
+    </tbody>
+    <!--Table body-->
+  </table>
+  <!--Table-->
+</div>
+<router-outlet></router-outlet>
