@@ -19,12 +19,6 @@ concept Location {
   o Double lon
 }
 
-enum InspectionStatus {
-  o OK
-  o NOT_OK
-}
-
-
 /* Participants */
 participant Customer identified by customerId {
   o String customerId
@@ -93,7 +87,6 @@ transaction ShipmentVehicleReport {
   --> Inspector inspector
   --> ShipmentVehicle vehicle
   --> Package[] packages
-  o InspectionStatus status
   o String note
 }
 

@@ -71,54 +71,43 @@ async function shipmentTransfer(shipmentTransfer) {
 async function shipmentVehicleReport(shipmentVehicleReport) {
 
     const packageRegistry = await getAssetRegistry("org.bitship.Package");
-    let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
-
-    // Update status for package
-    for (const packageObject of shipmentVehicleReport.packages) {
-        if (shipmentVehicleReport.status == "OK") {
-            packageObject.status = "IN_WAREHOUSE";
-            event.message = "Success";
-        } else {
-            packageObject.status = "LOST";
-            event.message = "Lost";
-        }
-        packageObject.warehouse = shipmentVehicleReport.inspector.warehouse;
-        packageObject.vehicle = null;
-        await packageRegistry.update(packageObject);
-        event.package = packageObject;
-        emit(event);
-    }
-
-    // Update for Warehouse
-    const length = shipmentVehicleReport.packages.length;
-    if (length == 0) return;
-
     const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
     const wareHouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");
-
-    // add packages to warehouse
-    shipmentVehicleReport.vehicle.packages.forEach((packageObject, i) => {
-        for(let j = 0; j < length; j++){
+    let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+    // loop through shipmentVehicleReport.vehicle.packages
+    for (const packageObject of shipmentVehicleReport.vehicle.packages) {
+        let packageLost = true;
+        for (let j = 0; j < shipmentVehicleReport.packages.length; j++) {
             if (packageObject.barcode == shipmentVehicleReport.packages[j].barcode) {
+                // if the package is present in shipmentVehicleReport, set it to OK, add to warehouse, and break
+                packageObject.status = "IN_WAREHOUSE";
+                packageObject.warehouse = shipmentVehicleReport.inspector.warehouse;
+                packageObject.vehicle = null;
+
+                // add to warehouse
                 if (shipmentVehicleReport.inspector.warehouse.packages){
                     shipmentVehicleReport.inspector.warehouse.packages = shipmentVehicleReport.inspector.warehouse.packages.concat(packageObject);
                 } else {
                     shipmentVehicleReport.inspector.warehouse.packages = [];
                     shipmentVehicleReport.inspector.warehouse.packages.push(packageObject);
                 }
-            }
-        }
-    })
-
-    // remove packages that we added to warehouse from vehicle
-    for (const packageObject of shipmentVehicleReport.packages) {
-        for(let j = 0; j < shipmentVehicleReport.vehicle.packages.length; j++) {
-            if (packageObject.barcode == shipmentVehicleReport.vehicle.packages[j].barcode) {
-                shipmentVehicleReport.vehicle.packages.splice(j, 1);
+                packageLost = false;
                 break;
             }
         }
+
+        // otherwise, set it to LOST
+        if (packageLost) {
+            packageObject.status = "LOST";
+            packageObject.warehouse = null;
+            packageObject.vehicle = null;
+        }
+
+        await packageRegistry.update(packageObject);
     }
+
+    // in both OK and LOST case, all of shipmentVehicleReport.vehicle.packages are removed from the vehicle
+    shipmentVehicleReport.vehicle.packages = null;
 
     await shipmentVehicleRegistry.update(shipmentVehicleReport.vehicle)
     await wareHouseRegistry.update(shipmentVehicleReport.inspector.warehouse);
