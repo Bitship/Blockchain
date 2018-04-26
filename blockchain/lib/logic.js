@@ -181,3 +181,18 @@ async function shipmentVehicleMove(tx) {
         emit(event)
     }
 }
+
+/**
+ * shipmentDeliver transaction
+ * @param {org.bitship.ShipmentDeliver} shipmentDeliver
+ * @transaction
+ */
+async function shipmentDeliver(tx) {
+    const packageRegistry = await getAssetRegistry('org.bitship.Package');
+    const shipmentVehicleRegistry = await getParticipantRegistry('org.bitship.ShipmentVehicle');
+    tx.package.status = 'DONE';
+    await packageRegistry,update(tx.package);
+
+    tx.vehicle.packages = tx.vehicle.packages.filter((pkg) => pkg.barcode != tx.package.barcode)
+    await shipmentVehicleRegistry.update(tx.vehicle);
+}
