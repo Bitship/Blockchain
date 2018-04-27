@@ -16,10 +16,12 @@ export class VehiclePackagesComponent implements OnInit {
     private errorMessage;
     private packages;
     private shipmentTransfer;
-    private scanedPackages: Array<string> = [];
+    private scannedPackages: Array<string> = [];
     private show: boolean = false;
     private buttonScanName: any = 'Scan package barcode';
-
+    private stringScannedPackages: string;
+    
+    
     constructor(private packageService: PackageService, private shipmentVehicleService: ShipmentVehicleService,
         private shipmentTransferService: ShipmentTransferService) {
     }
@@ -59,7 +61,7 @@ export class VehiclePackagesComponent implements OnInit {
         this.shipmentTransfer = {
             "$class": "org.bitship.ShipmentTransfer",
             "vehicle": 'toyotaTruck',
-            "packages": this.scanedPackages,
+            "packages": this.scannedPackages,
             "status": "IN_VEHICLE"
         }
 
@@ -68,7 +70,7 @@ export class VehiclePackagesComponent implements OnInit {
             .toPromise()
             .then((result) => {
                 this.loadPackagesOfShipmentVehicle();
-                this.scanedPackages = [];
+                this.scannedPackages = [];
             })
             .catch ((error) => {
                 console.error(error);
@@ -76,9 +78,16 @@ export class VehiclePackagesComponent implements OnInit {
     }
 
     onScannedPackages(barcodes: Array<string>) {
-        this.scanedPackages.splice(0, this.scanedPackages.length);
-        this.scanedPackages = this.scanedPackages.concat(barcodes);
+        this.scannedPackages.splice(0, this.scannedPackages.length);
+        this.scannedPackages = this.scannedPackages.concat(barcodes);
         this.toggle();
+        this.renderStringScannedPackagesId();
+    }
+    renderStringScannedPackagesId() {
+        this.stringScannedPackages = 'Scanned Packages: ';
+        for (const packageId of this.scannedPackages) {
+            this.stringScannedPackages +=  packageId + '---';
+        }
     }
 
     toggle() {

@@ -1,6 +1,6 @@
 <!-- Search -->
 <div class="container-fluid" style="padding-top: 50px">
-<h2 class="page-header">Inspector</h2>
+  <h2 class="page-header">Inspector</h2>
   <div class="row" style="padding: 10px">
     <div class="col-md-6">
       <div id="packageid-search-input">
@@ -13,28 +13,26 @@
 
       </div>
     </div>
-    <button (click)="searchVehicleId()">Search</button>
-    <button (click)="sendShipmentReport();" type="submit" class="btn btn-success" style="float: right">Shipment REPORT</button>
-    <button (click)="sendWarehouseReport();" type="submit" class="btn btn-success" style="float: right">Warehouse REPORT</button>
-    
+    <button (click)="searchVehicleId()" class="btn btn-info" style="float: right; margin: 5px">Search</button>
+    <button (click)="sendShipmentReport();" type="submit" class="btn btn-primary" style="float: right; margin: 5px">Shipment REPORT</button>
+    <button (click)="sendWarehouseReport();" type="submit" class="btn btn-success" style="float: right; margin: 5px">Warehouse REPORT</button>
+
   </div>
 
   <br>
   <!--Table-->
   <button (click)="toggle()" class="btn btn-warning">{{buttonScanName}}</button>
   <div *ngIf="show">
-    
     <scan-qr-code (onScanPackages)="onScannedPackages($event)"></scan-qr-code>
   </div>
-
+  <h4>{{stringScannedPackages}}</h4>
   <table class="table table-bordered table-responsive-md">
 
     <!--Table head-->
     <thead>
       <tr>
         <th class="pr-md-3 pr-5">
-          <input type="checkbox" class="filled-in" id="checkbox123">
-          <label for="checkbox123" class="label-table"></label>
+
         </th>
         <th>Package Id</th>
         <th>Status</th>
@@ -49,6 +47,7 @@
     <tbody>
       <tr *ngFor="let package of packages">
         <th scope="row" class="pr-md-3 pr-5">
+          <button [routerLink]="['package', package.barcode]" type="submit" class="btn btn-success" style="float: right; margin: 5px">Detail</button>
         </th>
         <td>{{package.barcode}}</td>
         <td>{{package.status}}</td>

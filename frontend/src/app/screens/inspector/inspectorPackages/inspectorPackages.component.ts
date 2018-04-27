@@ -23,7 +23,7 @@ export class InspectorPackagesComponent implements OnInit {
     private scannedPackages = [];
     private show: boolean = false;
     private buttonScanName: any = 'Scan package barcode';
-
+    private stringScannedPackages: string;
 
     myForm: FormGroup;
     vehicleId = new FormControl('', Validators.required);
@@ -64,6 +64,8 @@ export class InspectorPackagesComponent implements OnInit {
     }
 
     searchVehicleId() {
+        this.stringScannedPackages = '';
+        this.scannedPackages = [];
         this.loadPackagesFromVehicle();
     }
 
@@ -110,6 +112,14 @@ export class InspectorPackagesComponent implements OnInit {
         this.scannedPackages.splice(0, this.scannedPackages.length);
         this.scannedPackages = this.scannedPackages.concat(barcodes);
         this.toggle();
+        this.renderStringScannedPackagesId();
+    }
+
+    renderStringScannedPackagesId() {
+        this.stringScannedPackages = 'Scanned Packages: ';
+        for (const packageId of this.scannedPackages) {
+            this.stringScannedPackages +=  packageId + '---';
+        }
     }
 
     toggle() {

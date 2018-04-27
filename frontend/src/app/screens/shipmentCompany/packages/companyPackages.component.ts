@@ -14,8 +14,10 @@ export class CompanyPackagesComponent implements OnInit {
     private packages;
     private errorMessage;
     private shipmentTransfer;
-    private selectedPackages = [];
+    private selectedPackages: Array<string> = [];
     private status: string;
+    private stringSelectedPackages: string;
+
     constructor(private packageService: PackageService, private shipmentTransferService: ShipmentTransferService, private router: Router) {
     }
 
@@ -67,18 +69,25 @@ export class CompanyPackagesComponent implements OnInit {
             }
         }
         this.selectedPackages.push(packageId);
-        console.log('Packages: ', this.selectedPackages);
+        this.renderListPackages();
     }
 
     removePackages(packageId: any) {
         for (let j = 0; j < this.selectedPackages.length; j++) {
             if (this.selectedPackages[j] === packageId) {
                 this.selectedPackages.splice(j, 1);
-                return;
+                break;
             }
         }
+        this.renderListPackages();
     }
 
+    renderListPackages() {
+        this.stringSelectedPackages = '';
+        for (const packageId of this.selectedPackages) {
+            this.stringSelectedPackages += '---' +  packageId;
+        }
+    }
 
     clickPendingFilter() {
         this.status = 'PENDING';
