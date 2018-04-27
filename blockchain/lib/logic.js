@@ -27,17 +27,19 @@ async function shipmentTransfer(shipmentTransfer) {
     let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
     switch (shipmentTransfer.status) {
         case 'IN_VEHICLE':
-            // Update status and location for package            
+            // Update status and location for package
             for (const packageObject of shipmentTransfer.packages) {
                 packageObject.status = shipmentTransfer.status;
                 packageObject.location = shipmentTransfer.vehicle.location;
+                packageObject.vehicle = shipmentTransfer.vehicle;
+                packageObject.warehouse = null;
                 await packageRegistry.update(packageObject);
                 event.package = packageObject;
                 event.message = "Success";
                 emit(event);
             }
             break;
-            
+
         case 'ASSIGN':
             // Add expected packages to vehicle
             const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
@@ -46,7 +48,7 @@ async function shipmentTransfer(shipmentTransfer) {
             } else {
                 shipmentTransfer.vehicle.packages = shipmentTransfer.packages;
             }
-            
+
             shipmentVehicleRegistry.update(shipmentTransfer.vehicle);
 
             // Update status for package
@@ -62,6 +64,55 @@ async function shipmentTransfer(shipmentTransfer) {
     }
 }
 
+/**
+ * ShipmentTransfer transaction will handle three status : ASSIGN, CHECK_IN
+ * @param {org.bitship.ShipmentVehicleReport} shipmentVehicleReport
+ * @transaction
+ */
+async function shipmentVehicleReport(shipmentVehicleReport) {
+
+    const packageRegistry = await getAssetRegistry("org.bitship.Package");
+    const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
+    const wareHouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");
+    let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+    // loop through shipmentVehicleReport.vehicle.packages
+    for (const packageObject of shipmentVehicleReport.vehicle.packages) {
+        let packageLost = true;
+        for (let j = 0; j < shipmentVehicleReport.packages.length; j++) {
+            if (packageObject.barcode == shipmentVehicleReport.packages[j].barcode) {
+                // if the package is present in shipmentVehicleReport, set it to OK, add to warehouse, and break
+                packageObject.status = "IN_WAREHOUSE";
+                packageObject.warehouse = shipmentVehicleReport.inspector.warehouse;
+                packageObject.vehicle = null;
+
+                // add to warehouse
+                if (shipmentVehicleReport.inspector.warehouse.packages){
+                    shipmentVehicleReport.inspector.warehouse.packages = shipmentVehicleReport.inspector.warehouse.packages.concat(packageObject);
+                } else {
+                    shipmentVehicleReport.inspector.warehouse.packages = [];
+                    shipmentVehicleReport.inspector.warehouse.packages.push(packageObject);
+                }
+                packageLost = false;
+                break;
+            }
+        }
+
+        // otherwise, set it to LOST
+        if (packageLost) {
+            packageObject.status = "LOST";
+            packageObject.warehouse = null;
+            packageObject.vehicle = null;
+        }
+
+        await packageRegistry.update(packageObject);
+    }
+
+    // in both OK and LOST case, all of shipmentVehicleReport.vehicle.packages are removed from the vehicle
+    shipmentVehicleReport.vehicle.packages = null;
+
+    await shipmentVehicleRegistry.update(shipmentVehicleReport.vehicle)
+    await wareHouseRegistry.update(shipmentVehicleReport.inspector.warehouse);
+}
 
 /**
  * ShipmentTransfer transaction will handle three status : ASSIGN, CHECK_IN
@@ -74,28 +125,49 @@ async function warehouseReport(warehouseReport) {
     let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
 
     // Update status for package
-    for (const packageObject of shipmentTransfer.packages) {
+    for (const packageObject of warehouseReport.packages) {
         packageObject.status = "IN_VEHICLE";
+        packageObject.warehouse = null;
+        packageObject.vehicle = warehouseReport.vehicle;
         await packageRegistry.update(packageObject);
         event.package = packageObject;
         event.message = "Success";
         emit(event);
     }
-    
-    // Update for Warehouse 
-    const length = shipmentTransfer.warehouse.packages.length;
+
+    // Update for Warehouse
+    const length = warehouseReport.packages.length;
     if (length == 0) return;
 
-    const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");    
-    for (const packageObject of shipmentTransfer.packages){
+    const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
+    const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");
+
+    // add packages to vehicle
+    warehouseReport.packages.forEach((packageObject, i) => {
         for(let j = 0; j < length; j++){
-            if (shipmentTransfer.warehouse.packages[j].barcode === packageObject.barcode) {
-                shipmentTransfer.warehouse.packages.splice(j, 1);
+            if (warehouseReport.packages[j].barcode === packageObject.barcode) {
+                if (warehouseReport.vehicle.packages) {
+                    warehouseReport.vehicle.packages = warehouseReport.vehicle.packages.concat(packageObject);
+                } else {
+                    warehouseReport.vehicle.packages = [];
+                    warehouseReport.vehicle.packages.push(packageObject);
+                }
+            }
+        }
+    })
+
+    // remove packages from warehouse
+    for (const packageObject of warehouseReport.packages) {
+        for(let j = 0; j < warehouseReport.inspector.warehouse.packages.length; j++) {
+            if (packageObject.barcode == warehouseReport.inspector.warehouse.packages[j].barcode) {
+                warehouseReport.inspector.warehouse.packages.splice(j, 1);
                 break;
             }
         }
     }
-    await warehouseRegistry.update(shipmentTransfer.warehouse);
+
+    await shipmentVehicleRegistry.update(warehouseReport.vehicle)
+    await warehouseRegistry.update(warehouseReport.inspector.warehouse);
 }
 
 /**
