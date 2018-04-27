@@ -15,16 +15,18 @@ export class CompanyPackagesComponent implements OnInit {
     private errorMessage;
     private shipmentTransfer;
     private selectedPackages = [];
+    private status: string;
     constructor(private packageService: PackageService, private shipmentTransferService: ShipmentTransferService, private router: Router) {
     }
 
     ngOnInit() {
-        this.loadPendingPackages();
+        this.status = 'PENDING';
+        this.loadPendingPackages(this.status);
     }
 
-    loadPendingPackages(): Promise<any> {
+    loadPendingPackages(status: string): Promise<any> {
         let tempList = [];
-        return this.packageService.getAssetsWithStatus('PENDING')
+        return this.packageService.getAssetsWithStatus(status)
             .toPromise()
             .then((result) => {
                 this.errorMessage = null;
@@ -39,17 +41,17 @@ export class CompanyPackagesComponent implements OnInit {
 
     submitShipmentTransfer(): Promise<any> {
         this.shipmentTransfer = {
-            "$class": "org.bitship.ShipmentTransfer",
-            "vehicle": 'toyotaTruck',
-            "packages": this.selectedPackages,
-            "status": "ASSIGN"
+            '$class': 'org.bitship.ShipmentTransfer',
+            'vehicle': 'toyotaTruck',
+            'packages': this.selectedPackages,
+            'status': 'ASSIGN'
         }
 
         return this.shipmentTransferService
             .postShipmentTransaction(this.shipmentTransfer)
             .toPromise()
             .then((result) => {
-                this.loadPendingPackages();
+                this.loadPendingPackages(this.status);
                 this.selectedPackages = [];
             })
             .catch ((error) => {
@@ -58,14 +60,14 @@ export class CompanyPackagesComponent implements OnInit {
     }
 
     addPackages(packageId: any) {
-        console.log("Package: ", packageId);
+        console.log('Package: ', packageId);
         for (const item of this.selectedPackages) {
             if (item === packageId) {
                 return;
             }
         }
         this.selectedPackages.push(packageId);
-        console.log("Packages: ", this.selectedPackages);
+        console.log('Packages: ', this.selectedPackages);
     }
 
     removePackages(packageId: any) {
@@ -76,4 +78,16 @@ export class CompanyPackagesComponent implements OnInit {
             }
         }
     }
+
+
+    clickPendingFilter() {
+        this.status = 'PENDING';
+        this.loadPendingPackages(this.status);
+    }
+
+    clickInWarehouseFilter() {
+        this.status = 'IN_WAREHOUSE';
+        this.loadPendingPackages(this.status);
+    }
+
 }

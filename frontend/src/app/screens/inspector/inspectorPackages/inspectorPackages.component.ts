@@ -20,7 +20,7 @@ export class InspectorPackagesComponent implements OnInit {
     private packages;
     private shipmentVehicleReport;
     private wareHouseReport;
-    private scanedPackages = [];
+    private scannedPackages = [];
     private show: boolean = false;
     private buttonScanName: any = 'Scan package barcode';
 
@@ -71,26 +71,28 @@ export class InspectorPackagesComponent implements OnInit {
         this.shipmentVehicleReport = {
             '$class': 'org.bitship.ShipmentVehicleReport',
             'inspector': 'duyinspector1',
-            'ShipmentVehicle': this.vehicleId.value.trim(),
-            'packages': this.scanedPackages,
-            'status': 'OK',
+            'vehicle': this.vehicleId.value.trim(),
+            'packages': this.scannedPackages,
             'note': 'string'
         }
         return this.shipmentVehicleReportService
             .postTransaction(this.shipmentVehicleReport)
             .toPromise()
             .then((result) => {
-                this.scanedPackages = [];
-            });
+                this.scannedPackages.splice(0, this.scannedPackages.length);
+                this.packages.splice(0, this.packages.length);
+                this.loadPackagesFromVehicle();
+            }).catch((error) => {
+                console.log(error);
+            })
     }
 
     sendWarehouseReport(): Promise<any> {
         this.wareHouseReport = {
             '$class': 'org.bitship.WarehouseReport',
             'inspector': 'duyinspector1',
-            'packages': this.scanedPackages,
-            'warehouse': 'warhouse1',
-            'shipmentVehicle': this.scanedPackages,
+            'packages': this.scannedPackages,
+            'vehicle': this.vehicleId.value.trim(),
             'note': 'string'
         }
 
@@ -98,13 +100,16 @@ export class InspectorPackagesComponent implements OnInit {
             .postTransaction(this.wareHouseReport)
             .toPromise()
             .then((result) => {
-                this.scanedPackages = [];
+                this.scannedPackages.splice(0, this.scannedPackages.length);
+                this.packages.splice(0, this.packages.length);
+                this.loadPackagesFromVehicle();
             });
     }
 
     onScannedPackages(barcodes: Array<string>) {
-        this.scanedPackages.splice(0, this.scanedPackages.length);
-        this.scanedPackages = this.scanedPackages.concat(barcodes);
+        this.scannedPackages.splice(0, this.scannedPackages.length);
+        this.scannedPackages = this.scannedPackages.concat(barcodes);
+        this.toggle();
     }
 
     toggle() {

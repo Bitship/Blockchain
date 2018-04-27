@@ -78,6 +78,7 @@ export class VehiclePackagesComponent implements OnInit {
     onScannedPackages(barcodes: Array<string>) {
         this.scanedPackages.splice(0, this.scanedPackages.length);
         this.scanedPackages = this.scanedPackages.concat(barcodes);
+        this.toggle();
     }
 
     toggle() {

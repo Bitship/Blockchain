@@ -79,19 +79,17 @@ async function shipmentVehicleReport(shipmentVehicleReport) {
     for (const packageObject of shipmentVehicleReport.vehicle.packages) {
         let packageLost = true;
         for (let j = 0; j < shipmentVehicleReport.packages.length; j++) {
-            if (packageObject.barcode == shipmentVehicleReport.packages[j].barcode) {
+            if (packageObject.barcode === shipmentVehicleReport.packages[j].barcode) {
                 // if the package is present in shipmentVehicleReport, set it to OK, add to warehouse, and break
                 packageObject.status = "IN_WAREHOUSE";
                 packageObject.warehouse = shipmentVehicleReport.inspector.warehouse;
                 packageObject.vehicle = null;
 
                 // add to warehouse
-                if (shipmentVehicleReport.inspector.warehouse.packages){
-                    shipmentVehicleReport.inspector.warehouse.packages = shipmentVehicleReport.inspector.warehouse.packages.concat(packageObject);
-                } else {
-                    shipmentVehicleReport.inspector.warehouse.packages = [];
-                    shipmentVehicleReport.inspector.warehouse.packages.push(packageObject);
+                if (!shipmentVehicleReport.inspector.warehouse.packages){
+                    shipmentVehicleReport.inspector.warehouse.packages = [];                    
                 }
+                shipmentVehicleReport.inspector.warehouse.packages.push(packageObject);                
                 packageLost = false;
                 break;
             }
@@ -105,10 +103,13 @@ async function shipmentVehicleReport(shipmentVehicleReport) {
         }
 
         await packageRegistry.update(packageObject);
+        event.package = packageObject;
+        event.message = "Success";
+        emit(event);
     }
 
     // in both OK and LOST case, all of shipmentVehicleReport.vehicle.packages are removed from the vehicle
-    shipmentVehicleReport.vehicle.packages = null;
+    shipmentVehicleReport.vehicle.packages = [];
 
     await shipmentVehicleRegistry.update(shipmentVehicleReport.vehicle)
     await wareHouseRegistry.update(shipmentVehicleReport.inspector.warehouse);
@@ -141,20 +142,6 @@ async function warehouseReport(warehouseReport) {
 
     const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
     const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");
-
-    // add packages to vehicle
-    warehouseReport.packages.forEach((packageObject, i) => {
-        for(let j = 0; j < length; j++){
-            if (warehouseReport.packages[j].barcode === packageObject.barcode) {
-                if (warehouseReport.vehicle.packages) {
-                    warehouseReport.vehicle.packages = warehouseReport.vehicle.packages.concat(packageObject);
-                } else {
-                    warehouseReport.vehicle.packages = [];
-                    warehouseReport.vehicle.packages.push(packageObject);
-                }
-            }
-        }
-    })
 
     // remove packages from warehouse
     for (const packageObject of warehouseReport.packages) {
@@ -263,7 +250,7 @@ async function shipmentDeliver(tx) {
     const packageRegistry = await getAssetRegistry('org.bitship.Package');
     const shipmentVehicleRegistry = await getParticipantRegistry('org.bitship.ShipmentVehicle');
     tx.package.status = 'DONE';
-    await packageRegistry,update(tx.package);
+    await packageRegistry.update(tx.package);
 
     tx.vehicle.packages = tx.vehicle.packages.filter((pkg) => pkg.barcode != tx.package.barcode)
     await shipmentVehicleRegistry.update(tx.vehicle);

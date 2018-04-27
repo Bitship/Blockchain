@@ -6,11 +6,12 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class ShipmentVehicleReportService {
-    private NAMESPACE_SHIPMENT_TRANSFER: string = 'org.bitship.ShipmentVehicleReport';
+    private NAMESPACE: string = 'org.bitship.ShipmentVehicleReport';
     constructor(private dataService: DataService<ShipmentVehicleReport>) {
     };
 
     public postTransaction(transfer: any): Observable<ShipmentVehicleReport> {
-        return this.dataService.add(this.NAMESPACE_SHIPMENT_TRANSFER, transfer);
+        console.log('post Transaction dasda: ', JSON.stringify(transfer));
+        return this.dataService.add(this.NAMESPACE, transfer);
     }
 }
