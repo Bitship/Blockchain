@@ -43,7 +43,7 @@ async function shipmentTransfer(shipmentTransfer) {
         case 'ASSIGN':
             // Add expected packages to vehicle
             const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
-            if (shipmentTransfer.vehicle.packages){
+            if (shipmentTransfer.vehicle.packages) {
                 shipmentTransfer.vehicle.packages = shipmentTransfer.vehicle.packages.concat(shipmentTransfer.packages);
             } else {
                 shipmentTransfer.vehicle.packages = shipmentTransfer.packages;
@@ -86,10 +86,12 @@ async function shipmentVehicleReport(shipmentVehicleReport) {
                 packageObject.vehicle = null;
 
                 // add to warehouse
-                if (!shipmentVehicleReport.inspector.warehouse.packages){
-                    shipmentVehicleReport.inspector.warehouse.packages = [];                    
+                if (shipmentVehicleReport.inspector.warehouse.packages) {
+                    shipmentVehicleReport.inspector.warehouse.packages = shipmentVehicleReport.inspector.warehouse.packages.concat(packageObject);
+                } else {
+                    shipmentVehicleReport.inspector.warehouse.packages = [];
+                    shipmentVehicleReport.inspector.warehouse.packages.push(packageObject);
                 }
-                shipmentVehicleReport.inspector.warehouse.packages.push(packageObject);                
                 packageLost = false;
                 break;
             }
@@ -145,7 +147,7 @@ async function warehouseReport(warehouseReport) {
 
     // remove packages from warehouse
     for (const packageObject of warehouseReport.packages) {
-        for(let j = 0; j < warehouseReport.inspector.warehouse.packages.length; j++) {
+        for (let j = 0; j < warehouseReport.inspector.warehouse.packages.length; j++) {
             if (packageObject.barcode == warehouseReport.inspector.warehouse.packages[j].barcode) {
                 warehouseReport.inspector.warehouse.packages.splice(j, 1);
                 break;
@@ -162,7 +164,7 @@ async function warehouseReport(warehouseReport) {
  * @param {org.bitship.PackageLostReport} packageLostReport
  * @transaction
  */
-async function packageLostReport(packageLostReport){
+async function packageLostReport(packageLostReport) {
     packageLostReport.package.status = LOST;
     const packageRegistry = await getAssetRegistry("org.bitship.Package");
     packageRegistry.update(packageLostReport);
@@ -182,7 +184,7 @@ async function packageHistoryQuery(transaction) {
     const nativeKey = getNativeAPI().createCompositeKey('Asset:org.bitship.Package', [packageId]);
     const iterator = await getNativeAPI().getHistoryForKey(nativeKey);
     let results = [];
-    let res = {done : false};
+    let res = { done: false };
     while (!res.done) {
         res = await iterator.next();
 
