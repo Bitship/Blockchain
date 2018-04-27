@@ -13,6 +13,8 @@ import { PackageDetailComponent } from './components/packageDetail/packageDetail
 import { CompanyPackagesComponent} from './screens/shipmentCompany/packages/companyPackages.component';
 import { VehiclePackagesComponent } from './screens/shipmentVehicle/packages/vehiclePackages.component';
 import { InspectorPackagesComponent } from './screens/inspector/inspectorPackages/inspectorPackages.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { ScanQRCodeComponent } from './components/scannerQrCode/scannerQrCode.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,8 @@ import { InspectorPackagesComponent } from './screens/inspector/inspectorPackage
     PackageDetailComponent,
     CompanyPackagesComponent,
     VehiclePackagesComponent,
-    InspectorPackagesComponent
+    InspectorPackagesComponent,
+    ScanQRCodeComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +33,7 @@ import { InspectorPackagesComponent } from './screens/inspector/inspectorPackage
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    ZXingScannerModule.forRoot()
   ],
   providers: [
     Configuration,

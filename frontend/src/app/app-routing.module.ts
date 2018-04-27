@@ -28,14 +28,14 @@ const routesConfig: Routes = [
         path: 'shipmentVehicle',
         children: [
             { path: '', component: VehiclePackagesComponent },
-            { path: 'packages/:id', component: PackageDetailComponent}
+            { path: 'package/:id', component: PackageDetailComponent}
         ]
     },
     {
         path: 'inspector',
         children: [
             { path: '', component: InspectorPackagesComponent},
-            { path: 'packages/:id', component: PackageDetailComponent}
+            { path: 'package/:id', component: PackageDetailComponent}
         ]
     }
 ];

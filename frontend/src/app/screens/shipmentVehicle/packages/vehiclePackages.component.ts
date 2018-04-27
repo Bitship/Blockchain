@@ -3,19 +3,27 @@ import { PackageService } from '../../../services/package.service';
 import { Router } from '@angular/router';
 import { ShipmentVehicleService } from '../../../services/shipmentVehicle.service';
 import { PackageBarcode } from '../../../org.bitship';
+import { ShipmentTransferService } from '../../../services/shipmentTransfer.service';
 
 @Component({
     selector: 'app-showPackages',
     templateUrl: './vehiclePackages.component.html',
     styleUrls: ['./vehiclePackages.component.css'],
-    providers: [PackageService, ShipmentVehicleService]
+    providers: [PackageService, ShipmentVehicleService, ShipmentTransferService]
 })
 export class VehiclePackagesComponent implements OnInit {
     private packagesBarcode;
     private errorMessage;
     private packages;
-
-    constructor(private packageService: PackageService, private shipmentVehicleService: ShipmentVehicleService, private router: Router) {
+    private shipmentTransfer;
+    private scannedPackages: Array<string> = [];
+    private show: boolean = false;
+    private buttonScanName: any = 'Scan package barcode';
+    private stringScannedPackages: string;
+    
+    
+    constructor(private packageService: PackageService, private shipmentVehicleService: ShipmentVehicleService,
+        private shipmentTransferService: ShipmentTransferService) {
     }
 
     ngOnInit() {
@@ -47,6 +55,48 @@ export class VehiclePackagesComponent implements OnInit {
             })
             .catch((error) => {
             });
+    }
+
+    submitShipmentTransfer(): Promise<any> {
+        this.shipmentTransfer = {
+            "$class": "org.bitship.ShipmentTransfer",
+            "vehicle": 'toyotaTruck',
+            "packages": this.scannedPackages,
+            "status": "IN_VEHICLE"
+        }
+
+        return this.shipmentTransferService
+            .postShipmentTransaction(this.shipmentTransfer)
+            .toPromise()
+            .then((result) => {
+                this.loadPackagesOfShipmentVehicle();
+                this.scannedPackages = [];
+            })
+            .catch ((error) => {
+                console.error(error);
+            });
+    }
+
+    onScannedPackages(barcodes: Array<string>) {
+        this.scannedPackages.splice(0, this.scannedPackages.length);
+        this.scannedPackages = this.scannedPackages.concat(barcodes);
+        this.toggle();
+        this.renderStringScannedPackagesId();
+    }
+    renderStringScannedPackagesId() {
+        this.stringScannedPackages = 'Scanned Packages: ';
+        for (const packageId of this.scannedPackages) {
+            this.stringScannedPackages +=  packageId + '---';
+        }
+    }
+
+    toggle() {
+        this.show = !this.show;
+        if (this.show) {
+            this.buttonScanName = 'Not Scan';
+        } else {
+            this.buttonScanName = 'Scan package barcode';
+        }
     }
 }
 

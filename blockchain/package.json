@@ -1,6 +1,6 @@
 {
   "name": "bitship",
-  "version": "0.0.6",
+  "version": "0.0.1",
   "description": "Trusty shipment flatform built with blockchain",
   "scripts": {
     "prepublish": "mkdirp ./dist && composer archive create --sourceType dir --sourceName . -a ./dist/bitship.bna",

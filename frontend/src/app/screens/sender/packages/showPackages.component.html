@@ -7,7 +7,7 @@
         <div class="input-group col-md-12">
           <input type="text" class="form-control input-lg" placeholder="Search Package Id" />
           <span class="input-group-btn">
-            
+
           </span>
         </div>
       </div>
@@ -40,7 +40,7 @@
       <tr *ngFor="let package of packages">
         <th scope="row" class="pr-md-3 pr-5">
           <button [routerLink]="['package', package.barcode]" type="submit" class="btn btn-success" style="float: right">Detail</button>
-          
+
         </th>
         <td>{{package.barcode}}</td>
         <td>{{package.status}}</td>

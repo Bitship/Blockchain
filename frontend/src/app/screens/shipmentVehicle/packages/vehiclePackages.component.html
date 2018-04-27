@@ -1,28 +1,31 @@
 <!-- Search -->
 <h2 class="page-header">Shipment Vehicle ToyotaTruck</h2>
 <div class="container-fluid" style="padding-top: 50px">
+
   <div class="row" style="padding: 10px">
     <div class="col-md-6">
       <div id="packageid-search-input">
         <div class="input-group col-md-12">
-          <input type="text" class="form-control input-lg" placeholder="Search Package Id" />
+          <button (click)="toggle()" class="btn btn-warning" style="margin: 5px">{{buttonScanName}}</button>
+          <button (click)="submitShipmentTransfer()" type="submit" class="btn btn-success" style="float: right; margin: 5px">Submit report</button>
         </div>
       </div>
     </div>
-    <button [routerLink]="['create']" type="submit" class="btn btn-success" style="float: right">Scan barcode</button>
-  </div>
 
+  </div>
   <br>
   <!--Table-->
+  <div *ngIf="show">
+
+    <scan-qr-code (onScanPackages)="onScannedPackages($event)"></scan-qr-code>
+  </div>
+  <h4>{{stringScannedPackages}}</h4>
   <table class="table table-bordered table-responsive-md">
 
     <!--Table head-->
     <thead>
       <tr>
-        <th class="pr-md-3 pr-5">
-          <input type="checkbox" class="filled-in" id="checkbox123">
-          <label for="checkbox123" class="label-table"></label>
-        </th>
+
         <th>Package Id</th>
         <th>Status</th>
         <th>Weight</th>
@@ -35,10 +38,7 @@
     <!--Table body-->
     <tbody>
       <tr *ngFor="let package of packages">
-        <th scope="row" class="pr-md-3 pr-5">
-          <input type="checkbox" class="filled-in" id="checkbox124">
-          <label for="checkbox124" class="label-table"></label>
-        </th>
+
         <td>{{package.barcode}}</td>
         <td>{{package.status}}</td>
         <td>{{package.weight}} KG</td>

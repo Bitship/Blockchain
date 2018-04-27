@@ -1,0 +1,5 @@
+.small-video {
+    max-height: 50vh;
+    width: 50vh;
+    object-fit: contain;
+}

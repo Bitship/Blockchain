@@ -49,7 +49,7 @@
                   <label for="{{ pkg.barcode }}" class="label-table"></label>
                 </th>
                 <td>{{ pkg.status }}</td>
-                <td>{{ pkg.location.lat }} - {{ pkg.location.lon }}</td>
+                <td>{{ pkg.location && pkg.location.lat }} - {{ pkg.location && pkg.location.lon }}</td>
                 <td>{{ pkg.vehicle | slice:37 }}</td>
                 <td>{{ pkg.warehouse | slice:31 }}</td>
               </tr>

@@ -14,19 +14,21 @@
     <select>
       <option value="toyotaTruck">toyotaTruck</option>
     </select>
-    <button (click)="submitShipmentTransfer();" type="submit" class="btn btn-success" style="float: right">ASSIGN</button>
+    <button (click)="submitShipmentTransfer();" type="submit" class="btn btn-success" style="float: right; margin: 5px">ASSIGN</button>
   </div>
 
   <br>
   <!--Table-->
+  <button (click)="clickPendingFilter();" type="submit" class="btn btn-success" style="float: right; margin: 5px">PENDING</button>
+  <button (click)="clickInWarehouseFilter();" type="submit" class="btn btn-warning" style="float: right; margin: 5px">IN_WAREHOUSE</button>
+
+  <h4>{{stringSelectedPackages}}</h4>
   <table class="table table-bordered table-responsive-md">
 
     <!--Table head-->
     <thead>
       <tr>
         <th class="pr-md-3 pr-5">
-          <input type="checkbox" class="filled-in" id="checkbox123">
-          <label for="checkbox123" class="label-table"></label>
         </th>
         <th>Package Id</th>
         <th>Status</th>
@@ -41,8 +43,9 @@
     <tbody>
       <tr *ngFor="let package of packages">
         <th scope="row" class="pr-md-3 pr-5">
-          <button (click)="addPackages(package.barcode);"  class="btn btn-success" style="float: right">Add</button>
-          <button  (click)="removePackages(package.barcode);" class="btn btn-success" style="float: right">Remove</button>
+          <button [routerLink]="['package', package.barcode]" type="submit" class="btn btn-success" style="float: right; margin: 5px">Detail</button>
+          <button (click)="removePackages(package.barcode);" class="btn btn-success" style="float: right; margin: 5px">Remove</button>
+          <button (click)="addPackages(package.barcode);" class="btn btn-warning" style="float: right; margin: 5px">Add</button>
         </th>
         <td>{{package.barcode}}</td>
         <td>{{package.status}}</td>
