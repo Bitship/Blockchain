@@ -1,13 +1,13 @@
 <!-- Search -->
-<h2 class="page-header">Shipment Company</h2>
 <div class="container-fluid" style="padding-top: 50px">
+<h2 class="page-header">Inspector</h2>
   <div class="row" style="padding: 10px">
     <div class="col-md-6">
       <div id="packageid-search-input">
         <form [formGroup]="myForm">
           <div class="input-group col-md-12">
             <input type="text" class="form-control input-lg" placeholder="Shipment Vehicle" formControlName="vehicleId" />
-            
+
           </div>
         </form>
 
@@ -19,6 +19,12 @@
 
   <br>
   <!--Table-->
+  <button (click)="toggle()" class="btn btn-warning">{{buttonScanName}}</button>
+  <div *ngIf="show">
+    
+    <scan-qr-code (onScanPackages)="onScannedPackages($event)"></scan-qr-code>
+  </div>
+
   <table class="table table-bordered table-responsive-md">
 
     <!--Table head-->

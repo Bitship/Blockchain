@@ -11,7 +11,10 @@ export enum SessionStatus {
     DONE,
     LOST
 }
-
+enum InspectionStatus {
+    OK,
+    NOT_OK
+}
 export class Location {
     lat: number;
     lon: number;
@@ -38,14 +41,14 @@ export class Customer extends Participant {
     address: string;
 }
 
-export class WareHouse extends Participant {
+export class Warehouse extends Participant {
     packages: Package[];
     warehouseId: string;
     location: Location;
 }
 
 export class Inspector extends Participant {
-    warehouse: WareHouse;
+    warehouse: Warehouse;
     inspectorId: string;
     name: string;
 }
@@ -64,3 +67,19 @@ export class ShipmentTransfer extends Transaction {
     packages: Package[];
     status: SessionStatus;
 }
+
+export class ShipmentVehicleReport {
+    inspector: Inspector;
+    shipmentVehicle: ShipmentVehicle;
+    packages: Package[];
+    status: InspectionStatus;
+    note: String;
+}
+
+export class WarehouseReport {
+    inspector: Inspector;
+    packages: Package[] ;
+    warehouse: Warehouse;
+    shipmentVehicle: ShipmentVehicle ;
+    note: string;
+  }

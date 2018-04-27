@@ -13,9 +13,13 @@
     <button [routerLink]="['create']" type="submit" class="btn btn-success" style="float: right">SCAN</button>
     <button  (click)="submitShipmentTransfer()" type="submit" class="btn btn-success" style="float: right">Submit report</button>
   </div>
-  <scan-qr-code (onScanPackages)="onScannedPackages($event)"></scan-qr-code>
   <br>
   <!--Table-->
+  <button (click)="toggle()" class="btn btn-warning">{{buttonScanName}}</button>
+  <div *ngIf="show">
+    
+    <scan-qr-code (onScanPackages)="onScannedPackages($event)"></scan-qr-code>
+  </div>
   <table class="table table-bordered table-responsive-md">
 
     <!--Table head-->

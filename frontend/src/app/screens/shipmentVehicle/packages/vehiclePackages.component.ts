@@ -17,6 +17,9 @@ export class VehiclePackagesComponent implements OnInit {
     private packages;
     private shipmentTransfer;
     private scanedPackages: Array<string> = [];
+    private show: boolean = false;
+    private buttonScanName: any = 'Scan package barcode';
+
     constructor(private packageService: PackageService, private shipmentVehicleService: ShipmentVehicleService,
         private shipmentTransferService: ShipmentTransferService) {
     }
@@ -73,10 +76,17 @@ export class VehiclePackagesComponent implements OnInit {
     }
 
     onScannedPackages(barcodes: Array<string>) {
-        console.log('Barcode ddad a: ', barcodes.length);
         this.scanedPackages.splice(0, this.scanedPackages.length);
         this.scanedPackages = this.scanedPackages.concat(barcodes);
-        console.log('Barcode ddad a: ', JSON.stringify(this.scanedPackages[1]));
+    }
+
+    toggle() {
+        this.show = !this.show;
+        if (this.show) {
+            this.buttonScanName = 'Not Scan';
+        } else {
+            this.buttonScanName = 'Scan package barcode';
+        }
     }
 }
 
