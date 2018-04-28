@@ -4,6 +4,7 @@ import { Configuration } from './configuration';
 import { DataService } from './data.service';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { WebcamModule } from 'ngx-webcam';
 
 import { HttpModule } from '@angular/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,7 +36,8 @@ import { DeliverPackageComponent } from './screens/shipmentVehicle/delivers/deli
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    ZXingScannerModule.forRoot()
+    ZXingScannerModule.forRoot(),
+    WebcamModule,
   ],
   providers: [
     Configuration,

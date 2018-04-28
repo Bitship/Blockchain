@@ -8,6 +8,12 @@ import { Location } from '@angular/common';
 import { PackageDetailService } from '../../../components/packageDetail/packageDetail.service';
 import { WebsocketService } from '../../../components/packageDetail/websocket.service';
 import { ShipmentDeliverService } from '../../../services/shipmentDeliver.service';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable'
+import {WebcamImage} from 'ngx-webcam';
+import * as ipfsAPI from 'ipfs-api'
+
+const ipfs = ipfsAPI('localhost', '5001')
 
 @Component({
     selector: 'app-showPackages',
@@ -20,11 +26,14 @@ import { ShipmentDeliverService } from '../../../services/shipmentDeliver.servic
     ]
 })
 export class DeliverPackageComponent implements OnInit {
+    private trigger: Subject<void> = new Subject<void>();
     private selectedDevice: any
     private message = ''
     private scannerEnabled = true
     private package: any
     private sender: any
+    private showDeliveryConfirmedMsg = false
+    private saving = false
 
     constructor(
         private packageDetailService: PackageDetailService,
@@ -69,13 +78,51 @@ export class DeliverPackageComponent implements OnInit {
 
     async confirmDelivered() {
         await this.shipmentDeliverService.postShipmentDeliver(this.package.barcode)
+
+        this.showDeliveryConfirmedMsg = true
+        await this.sleep(2000)
+
         this.scannerEnabled = true
         this.package = null
         this.sender = null
+        this.showDeliveryConfirmedMsg = false
+    }
+
+    public async handleImage(webcamImage: WebcamImage) {
+        this.saving = true
+
+        console.log('received webcam image', webcamImage);
+        const buffer = Buffer.from(webcamImage.imageAsBase64, 'base64')
+        const resp = await ipfs.add(buffer)
+        const imageId = resp[0].hash
+
+        console.log('imageId', imageId)
+        await this.shipmentDeliverService.postShipmentDeliver(this.package.barcode, imageId)
+
+        this.saving = false
+        this.showDeliveryConfirmedMsg = true
+        await this.sleep(2000)
+
+        this.scannerEnabled = true
+        this.package = null
+        this.sender = null
+        this.showDeliveryConfirmedMsg = false
+    }
+
+    public get triggerObservable(): Observable<void> {
+        return this.trigger.asObservable();
+    }
+
+    public triggerSnapshot(): void {
+        this.trigger.next();
     }
 
     back() {
         this.location.back();
+    }
+
+    sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms))
     }
 }
 
