@@ -260,4 +260,5 @@ async function shipmentDeliver(tx) {
     const event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
     event.package = tx.package
     event.message = 'Delivered'
+    emit(event)
 }
