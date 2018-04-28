@@ -15,6 +15,7 @@ import { VehiclePackagesComponent } from './screens/shipmentVehicle/packages/veh
 import { InspectorPackagesComponent } from './screens/inspector/inspectorPackages/inspectorPackages.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ScanQRCodeComponent } from './components/scannerQrCode/scannerQrCode.component';
+import { DeliverPackageComponent } from './screens/shipmentVehicle/delivers/deliverPackage.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ScanQRCodeComponent } from './components/scannerQrCode/scannerQrCode.co
     CompanyPackagesComponent,
     VehiclePackagesComponent,
     InspectorPackagesComponent,
-    ScanQRCodeComponent
+    ScanQRCodeComponent,
+    DeliverPackageComponent,
   ],
   imports: [
     BrowserModule,

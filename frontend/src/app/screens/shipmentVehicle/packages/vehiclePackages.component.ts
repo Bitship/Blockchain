@@ -31,7 +31,7 @@ export class VehiclePackagesComponent implements OnInit {
     }
 
     loadPackagesOfShipmentVehicle(): Promise<any> {
-        let barcodes: Array<PackageBarcode> = [];
+        const barcodes: Array<PackageBarcode> = [];
 
         return this.shipmentVehicleService.getShipmentVehicle('toyotaTruck')
             .toPromise()
@@ -43,10 +43,11 @@ export class VehiclePackagesComponent implements OnInit {
                     packageId.barcode = resourcePackage.split('#')[1];
                     barcodes.push(packageId);
                 });
+                console.log('barcodes: ', barcodes)
                 return this.packageService.getPackagesByArrays(barcodes).toPromise();
             })
             .then((result) => {
-                let temp = [];
+                const temp = [];
                 result.forEach(asset => {
                     console.log(asset);
                     temp.push(asset);

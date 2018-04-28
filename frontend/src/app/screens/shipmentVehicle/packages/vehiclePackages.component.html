@@ -3,11 +3,12 @@
 <div class="container-fluid" style="padding-top: 50px">
 
   <div class="row" style="padding: 10px">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <div id="packageid-search-input">
         <div class="input-group col-md-12">
           <button (click)="toggle()" class="btn btn-warning" style="margin: 5px">{{buttonScanName}}</button>
-          <button (click)="submitShipmentTransfer()" type="submit" class="btn btn-success" style="float: right; margin: 5px">Submit report</button>
+          <button (click)="submitShipmentTransfer()" type="submit" class="btn btn-success" style="float: right; margin: 5px">Submit report</button> 
+          <a class="btn btn-primary" style="float: right; margin: 5px" [routerLink]="['delivers']">Deliver to Receiver</a>
         </div>
       </div>
     </div>

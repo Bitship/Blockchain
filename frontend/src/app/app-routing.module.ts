@@ -7,6 +7,7 @@ import { PackageDetailComponent } from './components/packageDetail/packageDetail
 import { CompanyPackagesComponent } from './screens/shipmentCompany/packages/companyPackages.component';
 import { VehiclePackagesComponent } from './screens/shipmentVehicle/packages/vehiclePackages.component';
 import { InspectorPackagesComponent } from './screens/inspector/inspectorPackages/inspectorPackages.component';
+import { DeliverPackageComponent } from './screens/shipmentVehicle/delivers/deliverPackage.component';
 
 const routesConfig: Routes = [
     {
@@ -28,6 +29,7 @@ const routesConfig: Routes = [
         path: 'shipmentVehicle',
         children: [
             { path: '', component: VehiclePackagesComponent },
+            { path: 'delivers', component: DeliverPackageComponent },
             { path: 'package/:id', component: PackageDetailComponent}
         ]
     },
