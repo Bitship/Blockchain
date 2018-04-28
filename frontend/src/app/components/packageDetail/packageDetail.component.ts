@@ -52,7 +52,7 @@ export class PackageDetailComponent implements OnInit, OnDestroy {
         console.log('sender: ', sender)
         console.log('history: ', history)
         this.sender = sender
-        this.history = history
+        this.history = history.reverse()
         return this.sender
       }),
     ).subscribe(() => {
@@ -64,7 +64,7 @@ export class PackageDetailComponent implements OnInit, OnDestroy {
         return
       }
 
-      this.history.push(pkg)
+      this.history.unshift(pkg)
     })
   }
 
