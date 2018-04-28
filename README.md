@@ -138,6 +138,8 @@ Up version in `blockchain/package.json`. Then run `./blockchain-update.sh` (requ
 && ./blockchain/data/interactPackage.sh
 ```
 
+### Install and start IPFS
+
 ### Clean up
 
 Clean up fabric-tools:
