@@ -256,4 +256,8 @@ async function shipmentDeliver(tx) {
 
     tx.vehicle.packages = tx.vehicle.packages.filter((pkg) => pkg.barcode != tx.package.barcode)
     await shipmentVehicleRegistry.update(tx.vehicle);
+
+    const event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+    event.package = tx.package
+    event.message = 'Delivered'
 }

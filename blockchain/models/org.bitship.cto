@@ -81,7 +81,7 @@ transaction ShipmentVehicleMove {
 transaction ShipmentDeliver {
   --> Package package
   --> ShipmentVehicle vehicle
-  o String signature
+  o String signature optional
 }
 
 transaction ShipmentVehicleReport {
