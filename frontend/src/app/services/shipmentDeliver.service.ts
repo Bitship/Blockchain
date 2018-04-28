@@ -10,12 +10,12 @@ export class ShipmentDeliverService {
     constructor(private dataService: DataService<any>) {
     };
 
-    public postShipmentDeliver(packageBarcode: string): Observable<any> {
+    public async postShipmentDeliver(packageBarcode: string) {
         const shipmentDeliver = {
             $class: this.NAMESPACE,
             vehicle: 'toyotaTruck',
-            package: packageBarcode,
+            package: `resource:org.bitship.Package#${packageBarcode}`,
         }
-        return this.dataService.add(this.NAMESPACE, shipmentDeliver);
+        await this.dataService.add(this.NAMESPACE, shipmentDeliver).toPromise();
     }
 }

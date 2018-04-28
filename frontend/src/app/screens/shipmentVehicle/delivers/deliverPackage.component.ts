@@ -69,7 +69,7 @@ export class DeliverPackageComponent implements OnInit {
 
     async confirmDelivered() {
         await this.shipmentDeliverService.postShipmentDeliver(this.package.barcode)
-        this.scannerEnabled = false
+        this.scannerEnabled = true
         this.package = null
         this.sender = null
     }
