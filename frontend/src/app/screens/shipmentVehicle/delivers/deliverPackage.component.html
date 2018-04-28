@@ -13,7 +13,7 @@
 
     <div class="col-md-12">
         <h2 *ngIf="message">{{ message }}</h2>
-        <div style="max-width: 500px">
+        <div style="max-width: 500px" *ngIf="scannerEnabled">
             <zxing-scanner
                 [scannerEnabled]="scannerEnabled"
                 [autofocusEnabled]="true"
@@ -22,6 +22,7 @@
                 (camerasFound)="displayCameras($event)"
                 (scanSuccess)="onScannedPackages($event)"
             ></zxing-scanner>
+            <input type="text" class="input-stealth" (keyup)="onTestScannerKey($event)"/>
         </div>
 
         <div style="padding: 10px" *ngIf="package && sender">
@@ -30,6 +31,7 @@
             <p>Package Sender Name: {{ sender.firstName }} {{ sender.lastName }}</p>
             <p>Package Receiver Name: {{ package.receiverName }}</p>
             <p>Package Receiver Address: {{ package.receiverAddress }}</p>
+            <button (click)="confirmDelivered()" class="btn btn-primary" style="margin: 5px">Confirm Delivered</button>
         </div>
         
         <!-- <scan-qr-code

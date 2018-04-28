@@ -7,6 +7,7 @@ import { ShipmentTransferService } from '../../../services/shipmentTransfer.serv
 import { Location } from '@angular/common';
 import { PackageDetailService } from '../../../components/packageDetail/packageDetail.service';
 import { WebsocketService } from '../../../components/packageDetail/websocket.service';
+import { ShipmentDeliverService } from '../../../services/shipmentDeliver.service';
 
 @Component({
     selector: 'app-showPackages',
@@ -15,7 +16,7 @@ import { WebsocketService } from '../../../components/packageDetail/websocket.se
     providers: [
         PackageDetailService,
         WebsocketService,
-        PackageService, ShipmentVehicleService, ShipmentTransferService,
+        ShipmentDeliverService,
     ]
 })
 export class DeliverPackageComponent implements OnInit {
@@ -27,9 +28,7 @@ export class DeliverPackageComponent implements OnInit {
 
     constructor(
         private packageDetailService: PackageDetailService,
-        private packageService: PackageService,
-        private shipmentVehicleService: ShipmentVehicleService,
-        private shipmentTransferService: ShipmentTransferService,
+        private shipmentDeliverService: ShipmentDeliverService,
         private location: Location
     ) {
     }
@@ -56,8 +55,23 @@ export class DeliverPackageComponent implements OnInit {
         console.log('barcodes: ', barcodes)
 
         const {pkg, sender} = await this.packageDetailService.getDetails(barcodes[0])
+        console.log({pkg, sender})
         this.package = pkg
         this.sender = sender
+    }
+
+    onTestScannerKey(event) {
+        if (event.keyCode === 13) {
+            this.onScannedPackages([event.target.value])
+            return
+        }
+    }
+
+    async confirmDelivered() {
+        await this.shipmentDeliverService.postShipmentDeliver(this.package.barcode)
+        this.scannerEnabled = false
+        this.package = null
+        this.sender = null
     }
 
     back() {

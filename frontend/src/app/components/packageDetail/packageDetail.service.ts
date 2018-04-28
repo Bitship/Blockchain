@@ -31,7 +31,8 @@ export class PackageDetailService {
 
     public async getDetails(packageBarcode: string): Promise<{pkg: any, sender: any}> {
         const pkg: any = await this.getSingle(packageBarcode).toPromise()
-        const sender = await this.getSingleCustomer(pkg.sender)
+        const senderId = pkg.sender.split('#')[1]
+        const sender = await this.getSingleCustomer(senderId).toPromise()
         return {pkg, sender}
     }
 
