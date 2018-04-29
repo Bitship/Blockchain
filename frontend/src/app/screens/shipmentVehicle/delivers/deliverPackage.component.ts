@@ -15,6 +15,8 @@ import * as ipfsAPI from 'ipfs-api'
 
 const ipfs = ipfsAPI('localhost', '5001')
 
+declare const Buffer
+
 @Component({
     selector: 'app-showPackages',
     templateUrl: './deliverPackage.component.html',
@@ -76,17 +78,17 @@ export class DeliverPackageComponent implements OnInit {
         }
     }
 
-    async confirmDelivered() {
-        await this.shipmentDeliverService.postShipmentDeliver(this.package.barcode)
+    // async confirmDelivered() {
+    //     await this.shipmentDeliverService.postShipmentDeliver(this.package.barcode)
 
-        this.showDeliveryConfirmedMsg = true
-        await this.sleep(2000)
+    //     this.showDeliveryConfirmedMsg = true
+    //     await this.sleep(2000)
 
-        this.scannerEnabled = true
-        this.package = null
-        this.sender = null
-        this.showDeliveryConfirmedMsg = false
-    }
+    //     this.scannerEnabled = true
+    //     this.package = null
+    //     this.sender = null
+    //     this.showDeliveryConfirmedMsg = false
+    // }
 
     public async handleImage(webcamImage: WebcamImage) {
         this.saving = true
