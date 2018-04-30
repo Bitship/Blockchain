@@ -29,6 +29,13 @@ export class PackageDetailService {
         return this.customerService.getSingle('org.bitship.Customer', customerId)
     }
 
+    public async getDetails(packageBarcode: string): Promise<{pkg: any, sender: any}> {
+        const pkg: any = await this.getSingle(packageBarcode).toPromise()
+        const senderId = pkg.sender.split('#')[1]
+        const sender = await this.getSingleCustomer(senderId).toPromise()
+        return {pkg, sender}
+    }
+
     public getHistory(packageId: string): Observable<Package[]> {
         return this.http.get(`http://localhost:4000/packages/${packageId}/transfer_history`)
             .map(this.extractData)

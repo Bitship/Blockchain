@@ -1,0 +1,51 @@
+<!-- Search -->
+<h2 class="page-header">Shipment Vehicle Deliver to Receiver</h2>
+<div class="container-fluid" style="padding-top: 50px">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div id="packageid-search-input">
+        <div class="input-group col-md-12">
+          <button (click)="back()" class="btn btn-secondary" style="margin: 5px">Back</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12">
+        <h2 *ngIf="message">{{ message }}</h2>
+        <div style="max-width: 500px" *ngIf="scannerEnabled">
+            <h3>Scan package code</h3>
+            <zxing-scanner
+                [scannerEnabled]="scannerEnabled"
+                [autofocusEnabled]="true"
+                [device]="selectedDevice"
+                [cssClass]="'small-video'"
+                (camerasFound)="displayCameras($event)"
+                (scanSuccess)="onScannedPackages($event)"
+            ></zxing-scanner>
+            <input type="text" class="input-stealth" (keyup)="onTestScannerKey($event)"/>
+        </div>
+
+        <div style="padding: 10px" [class.saving]="saving" *ngIf="package && sender">
+            <p>Barcode: {{package.barcode}}</p>
+            <p>Weight: {{package.weight}}</p>
+            <p>Package Sender Name: {{ sender.firstName }} {{ sender.lastName }}</p>
+            <p>Package Receiver Name: {{ package.receiverName }}</p>
+            <p>Package Receiver Address: {{ package.receiverAddress }}</p>
+            <!-- <button (click)="confirmDelivered()" class="btn btn-primary" style="margin: 5px">Confirm Delivered</button> -->
+            <div (click)="triggerSnapshot();" *ngIf="!showDeliveryConfirmedMsg">
+                <webcam [trigger]="triggerObservable" (imageCapture)="handleImage($event)"></webcam>
+            </div>
+            <div class="alert alert-success" role="alert" *ngIf="showDeliveryConfirmedMsg">
+                Package delivery confirmed!
+            </div>
+        </div>
+        
+        <!-- <scan-qr-code
+            (onScanPackages)="onScannedPackages($event)"
+            [scannerEnabled]="scannerEnabled"
+        ></scan-qr-code> -->
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>
