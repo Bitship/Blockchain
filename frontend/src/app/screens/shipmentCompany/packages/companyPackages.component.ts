@@ -17,6 +17,7 @@ export class CompanyPackagesComponent implements OnInit {
     private selectedPackages: Array<string> = [];
     private status: string;
     private stringSelectedPackages: string;
+    private vehicleId = 'toyotaTruck';
 
     constructor(private packageService: PackageService, private shipmentTransferService: ShipmentTransferService, private router: Router) {
     }
@@ -44,7 +45,7 @@ export class CompanyPackagesComponent implements OnInit {
     submitShipmentTransfer(): Promise<any> {
         this.shipmentTransfer = {
             '$class': 'org.bitship.ShipmentTransfer',
-            'vehicle': 'toyotaTruck',
+            'vehicle': this.vehicleId,
             'packages': this.selectedPackages,
             'status': 'ASSIGN'
         }
