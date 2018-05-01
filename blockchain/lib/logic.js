@@ -125,38 +125,48 @@ async function shipmentVehicleReport(shipmentVehicleReport) {
 async function warehouseReport(warehouseReport) {
 
     const packageRegistry = await getAssetRegistry("org.bitship.Package");
-    let event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+    const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
+    const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");
 
-    // Update status for package
-    for (const packageObject of warehouseReport.packages) {
-        packageObject.status = "IN_VEHICLE";
-        packageObject.warehouse = null;
-        packageObject.vehicle = warehouseReport.vehicle;
-        await packageRegistry.update(packageObject);
-        event.package = packageObject;
+    const scannedPackages = warehouseReport.packages
+    const unscannedPackages = warehouseReport.inspector.warehouse.packages.filter((pkg) => {
+        return scannedPackages.findIndex((scannedPkg) => scannedPkg.barcode === pkg.barcode) === -1
+    })
+
+    const event = getFactory().newEvent('org.bitship', 'ShipmentTransfered');
+
+    for (const pkg of scannedPackages) {
+        pkg.status = "IN_VEHICLE";
+        pkg.warehouse = null;
+        pkg.vehicle = warehouseReport.vehicle;
+        await packageRegistry.update(pkg);
+
+        event.package = pkg;
         event.message = "Success";
         emit(event);
     }
 
-    // Update for Warehouse
-    const length = warehouseReport.packages.length;
-    if (length == 0) return;
+    for (const pkg of unscannedPackages) {
+        pkg.status = "LOST";
+        pkg.warehouse = null;
+        pkg.vehicle = null;
+        await packageRegistry.update(pkg);
 
-    const shipmentVehicleRegistry = await getParticipantRegistry("org.bitship.ShipmentVehicle");
-    const warehouseRegistry = await getParticipantRegistry("org.bitship.Warehouse");
-
-    // remove packages from warehouse
-    for (const packageObject of warehouseReport.packages) {
-        for (let j = 0; j < warehouseReport.inspector.warehouse.packages.length; j++) {
-            if (packageObject.barcode == warehouseReport.inspector.warehouse.packages[j].barcode) {
-                warehouseReport.inspector.warehouse.packages.splice(j, 1);
-                break;
-            }
-        }
+        event.package = pkg;
+        event.message = "Success";
+        emit(event);
     }
 
-    await shipmentVehicleRegistry.update(warehouseReport.vehicle)
+    // in both OK and LOST case, all packages are removed from the warehouse
+    warehouseReport.inspector.warehouse.packages = []
     await warehouseRegistry.update(warehouseReport.inspector.warehouse);
+
+    if (scannedPackages.length === 0) {
+        return
+    }
+
+    warehouseReport.vehicle.packages = warehouseReport.vehicle.packages.concat(scannedPackages)
+    await shipmentVehicleRegistry.update(warehouseReport.vehicle)
 }
 
 /**
