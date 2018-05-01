@@ -12,6 +12,7 @@ import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable'
 import {WebcamImage} from 'ngx-webcam';
 import * as ipfsAPI from 'ipfs-api'
+import { ActivatedRoute } from '@angular/router';
 
 const ipfs = ipfsAPI('localhost', '5001')
 
@@ -40,7 +41,8 @@ export class DeliverPackageComponent implements OnInit {
     constructor(
         private packageDetailService: PackageDetailService,
         private shipmentDeliverService: ShipmentDeliverService,
-        private location: Location
+        private location: Location,
+        private route: ActivatedRoute,
     ) {
     }
 
@@ -97,9 +99,12 @@ export class DeliverPackageComponent implements OnInit {
         const buffer = Buffer.from(webcamImage.imageAsBase64, 'base64')
         const resp = await ipfs.add(buffer)
         const imageId = resp[0].hash
-
         console.log('imageId', imageId)
-        await this.shipmentDeliverService.postShipmentDeliver(this.package.barcode, imageId)
+
+        const params = await this.route.params.first().toPromise()
+        const vehicleId = params.vehicleId
+
+        await this.shipmentDeliverService.postShipmentDeliver(vehicleId, this.package.barcode, imageId)
 
         this.saving = false
         this.showDeliveryConfirmedMsg = true

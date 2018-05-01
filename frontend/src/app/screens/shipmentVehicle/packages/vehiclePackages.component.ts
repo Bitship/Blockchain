@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PackageService } from '../../../services/package.service';
 import { Router } from '@angular/router';
 import { ShipmentVehicleService } from '../../../services/shipmentVehicle.service';
 import { PackageBarcode } from '../../../org.bitship';
 import { ShipmentTransferService } from '../../../services/shipmentTransfer.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-showPackages',
@@ -11,29 +12,37 @@ import { ShipmentTransferService } from '../../../services/shipmentTransfer.serv
     styleUrls: ['./vehiclePackages.component.css'],
     providers: [PackageService, ShipmentVehicleService, ShipmentTransferService]
 })
-export class VehiclePackagesComponent implements OnInit {
+export class VehiclePackagesComponent implements OnInit, OnDestroy {
     private packagesBarcode;
     private errorMessage;
     private packages;
     private shipmentTransfer;
     private scannedPackages: Array<string> = [];
-    private show: boolean = false;
+    private show = false;
     private buttonScanName: any = 'Scan package barcode';
     private stringScannedPackages: string;
-    
-    
-    constructor(private packageService: PackageService, private shipmentVehicleService: ShipmentVehicleService,
-        private shipmentTransferService: ShipmentTransferService) {
+    private vehicleId: string;
+    private sub: any
+
+    constructor(
+        private route: ActivatedRoute,
+        private packageService: PackageService,
+        private shipmentVehicleService: ShipmentVehicleService,
+        private shipmentTransferService: ShipmentTransferService,
+    ) {
     }
 
-    ngOnInit() {
-        this.loadPackagesOfShipmentVehicle();
+    async ngOnInit() {
+        this.sub = await this.route.params.subscribe((params) => {
+            this.vehicleId = params.vehicleId
+            this.loadPackagesOfShipmentVehicle();
+        })
     }
 
     loadPackagesOfShipmentVehicle(): Promise<any> {
         const barcodes: Array<PackageBarcode> = [];
 
-        return this.shipmentVehicleService.getShipmentVehicle('toyotaTruck')
+        return this.shipmentVehicleService.getShipmentVehicle(this.vehicleId)
             .toPromise()
             .then((result) => {
                 let tempList = [];
@@ -61,7 +70,7 @@ export class VehiclePackagesComponent implements OnInit {
     submitShipmentTransfer(): Promise<any> {
         this.shipmentTransfer = {
             "$class": "org.bitship.ShipmentTransfer",
-            "vehicle": 'toyotaTruck',
+            "vehicle": this.vehicleId,
             "packages": this.scannedPackages,
             "status": "IN_VEHICLE"
         }
@@ -98,6 +107,10 @@ export class VehiclePackagesComponent implements OnInit {
         } else {
             this.buttonScanName = 'Scan package barcode';
         }
+    }
+
+    ngOnDestroy() {
+        this.sub.unsubscribe();
     }
 }
 

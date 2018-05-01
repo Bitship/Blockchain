@@ -26,7 +26,7 @@ const routesConfig: Routes = [
         ]
     },
     {
-        path: 'shipmentVehicle',
+        path: 'shipmentVehicle/:vehicleId',
         children: [
             { path: '', component: VehiclePackagesComponent },
             { path: 'delivers', component: DeliverPackageComponent },
