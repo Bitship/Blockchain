@@ -21,7 +21,7 @@ export class ShowPackagesComponent implements OnInit {
 
     loadAll(): Promise<any> {
         let tempList = [];
-        return this.packageService.getAssetsBySender('thang1')
+        return this.packageService.getAssetsBySender('tinh1')
             .toPromise()
             .then((result) => {
                 this.errorMessage = null;

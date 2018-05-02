@@ -14,11 +14,11 @@ export class CreatePackageComponent implements OnInit {
     myForm: FormGroup;
     private asset;
 
-    barcode = new FormControl("", Validators.required);
-    receiverAddress = new FormControl("", Validators.required);
-    receiverPhone = new FormControl("", Validators.required);
-    receiverName = new FormControl("", Validators.required);
-    weight = new FormControl("", Validators.required);
+    barcode = new FormControl('', Validators.required);
+    receiverAddress = new FormControl('', Validators.required);
+    receiverPhone = new FormControl('', Validators.required);
+    receiverName = new FormControl('', Validators.required);
+    weight = new FormControl('', Validators.required);
 
     constructor(private packageService: PackageService, fb: FormBuilder, private location: Location) {
         this.myForm = fb.group({
@@ -34,14 +34,14 @@ export class CreatePackageComponent implements OnInit {
 
     addAsset(form: any): Promise<any> {
         this.asset = {
-            $class: "org.bitship.Package",
-            "sender": "thang1",
-            "barcode": this.barcode.value,
-            "weight": this.weight.value,
-            "status": "PENDING",
-            "receiverAddress": this.receiverAddress.value,
-            "receiverPhone": this.receiverPhone.value,
-            "receiverName": this.receiverName.value
+            $class: 'org.bitship.Package',
+            'sender': 'tinh1',
+            'barcode': this.barcode.value,
+            'weight': this.weight.value,
+            'status': 'PENDING',
+            'receiverAddress': this.receiverAddress.value,
+            'receiverPhone': this.receiverPhone.value,
+            'receiverName': this.receiverName.value
         }
         return this.packageService.addAsset(this.asset)
             .toPromise()

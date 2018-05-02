@@ -1,60 +1,34 @@
 <div class="container-fluid">
-    <h2 class="page-header">PACKAGE DETAIL (SENDER & RECEIVER)</h2>
+  <div class="tab-content">
     <div style="padding: 10px" *ngIf="package && sender">
+      <h3 class="page-header" style="margin-top:40px;">PACKAGE DETAIL</h3>
       <p>Barcode: {{package.barcode}}</p>
       <p>Weight: {{package.weight}}</p>
       <p>Package Sender Name: {{ sender.firstName }} {{ sender.lastName }}</p>
       <p>Package Receiver Name: {{ package.receiverName }}</p>
       <p>Package Receiver Address: {{ package.receiverAddress }}</p>
     </div>
+    <table class="table table-bordered table-responsive-md">
+
+      <thead>
+        <tr>
+          <th>Status Of Transfer</th>
+          <th>Location</th>
+          <th>Shipper Name</th>
+          <th>Warehouse</th>
+        </tr>
+      </thead>
+
+      <tbody *ngIf="history">
+        <ng-container *ngFor="let pkg of history">
+          <tr>
+            <td>{{ pkg.status }}</td>
+            <td>{{ pkg.location && pkg.location.lat }} - {{ pkg.location && pkg.location.lon }}</td>
+            <td>{{ pkg.vehicle | slice:37 }}</td>
+            <td>{{ pkg.warehouse | slice:31 }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
   </div>
-  
-  <div class="container-fluid">
-    <!-- ######################################################## -->
-    <ul class="nav nav-tabs">
-      <li class="nav-item">
-        <a class="nav-link active" data-toggle="tab" href="#home">History Of Transfer</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-toggle="tab" href="#menu1">Map</a>
-      </li>
-    </ul>
-  
-    <div class="tab-content">
-      <div class="tab-pane active container" id="home">
-        <table class="table table-bordered table-responsive-md">
-  
-          <thead>
-            <tr>
-              <th class="pr-md-3 pr-5">
-                <input type="checkbox" class="filled-in" id="checkbox123">
-                <label for="checkbox123" class="label-table"></label>
-              </th>
-              <th>Status Of Transfer</th>
-              <th>Location</th>
-              <th>Shipper Name</th>
-              <th>Warehouse</th>
-            </tr>
-          </thead>
-  
-          <tbody *ngIf="history">
-            <ng-container *ngFor="let pkg of history">
-              <tr>
-                <th scope="row" class="pr-md-3 pr-5">
-                  <input type="checkbox" class="filled-in" id="{{ pkg.barcode }}">
-                  <label for="{{ pkg.barcode }}" class="label-table"></label>
-                </th>
-                <td>{{ pkg.status }}</td>
-                <td>{{ pkg.location && pkg.location.lat }} - {{ pkg.location && pkg.location.lon }}</td>
-                <td>{{ pkg.vehicle | slice:37 }}</td>
-                <td>{{ pkg.warehouse | slice:31 }}</td>
-              </tr>
-            </ng-container>
-          </tbody>
-        </table>
-      </div>
-      <div class="tab-pane container-fluid" id="menu1">
-        <p>Map??????</p>
-      </div>
-    </div>
-  </div>
+</div>

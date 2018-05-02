@@ -4,10 +4,8 @@
   <div class="row" style="padding: 10px">
     <div class="col-md-6">
       <div id="packageid-search-input">
-        <div class="input-group col-md-12">
+        <div class="input-group col-md-12" style="padding-left:0px">
           <input type="text" class="form-control input-lg" placeholder="Search Package Id" />
-          <span class="input-group-btn">
-          </span>
         </div>
       </div>
     </div>
@@ -25,17 +23,21 @@
 
   <h4>{{stringSelectedPackages}}</h4>
   <table class="table table-bordered table-responsive-md">
-
     <!--Table head-->
     <thead>
       <tr>
-        <th class="pr-md-3 pr-5">
-        </th>
+
         <th>Package Id</th>
         <th>Status</th>
         <th>Weight</th>
         <th>Receiver Name</th>
         <th>Receiver Address</th>
+        <th class="pr-md-3 pr-5">
+        </th>
+        <th class="pr-md-3 pr-5">
+        </th>
+        <th class="pr-md-3 pr-5">
+        </th>
       </tr>
     </thead>
     <!--Table head-->
@@ -43,16 +45,20 @@
     <!--Table body-->
     <tbody>
       <tr *ngFor="let package of packages">
-        <th scope="row" class="pr-md-3 pr-5">
-          <button [routerLink]="['package', package.barcode]" type="submit" class="btn btn-success" style="float: right; margin: 5px">Detail</button>
-          <button (click)="removePackages(package.barcode);" class="btn btn-success" style="float: right; margin: 5px">Remove</button>
-          <button (click)="addPackages(package.barcode);" class="btn btn-warning" style="float: right; margin: 5px">Add</button>
-        </th>
         <td>{{package.barcode}}</td>
         <td>{{package.status}}</td>
         <td>{{package.weight}} KG</td>
         <td>{{package.receiverName}}</td>
         <td>{{package.receiverAddress}}</td>
+        <td>
+          <button [routerLink]="['package', package.barcode]" type="submit" class="btn btn-success" style="float: right; margin: 5px">Detail</button>
+        </td>
+        <td>
+          <button (click)="addPackages(package.barcode);" class="btn btn-warning" style="float: right; margin: 5px">Add</button>
+        </td>
+        <td>
+          <button (click)="removePackages(package.barcode);" class="btn btn-success" style="float: right; margin: 5px">Remove</button>
+        </td>
       </tr>
     </tbody>
     <!--Table body-->

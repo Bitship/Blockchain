@@ -93,11 +93,15 @@ export class CompanyPackagesComponent implements OnInit {
     clickPendingFilter() {
         this.status = 'PENDING';
         this.loadPendingPackages(this.status);
+        this.selectedPackages = [];
+        this.stringSelectedPackages = '';
     }
 
     clickInWarehouseFilter() {
         this.status = 'IN_WAREHOUSE';
         this.loadPendingPackages(this.status);
+        this.selectedPackages = [];
+        this.stringSelectedPackages = '';
     }
 
 }
