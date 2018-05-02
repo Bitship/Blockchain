@@ -58,12 +58,12 @@ export class VehiclePackagesComponent implements OnInit {
             });
     }
 
-    submitShipmentTransfer(): Promise<any> {
+    submitShipmentTransfer(status: string): Promise<any> {
         this.shipmentTransfer = {
-            "$class": "org.bitship.ShipmentTransfer",
-            "vehicle": 'toyotaTruck',
-            "packages": this.scannedPackages,
-            "status": "IN_VEHICLE"
+            '$class': 'org.bitship.ShipmentTransfer',
+            'vehicle': 'toyotaTruck',
+            'packages': this.scannedPackages,
+            'status': status
         }
 
         return this.shipmentTransferService
