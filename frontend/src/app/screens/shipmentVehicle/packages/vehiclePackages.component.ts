@@ -67,7 +67,7 @@ export class VehiclePackagesComponent implements OnInit, OnDestroy {
             });
     }
 
-    submitShipmentTransfer(): Promise<any> {
+    submitShipmentTransfer(status: string): Promise<any> {
         this.shipmentTransfer = {
             "$class": "org.bitship.ShipmentTransfer",
             "vehicle": this.vehicleId,

@@ -152,3 +152,6 @@ Clean up fabric-tools:
 # or
 ./blockchain-clear.sh
 ```
+
+
+https://gyazo.com/f7de3a6dc4e4e380925823944eb36036

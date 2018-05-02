@@ -103,8 +103,8 @@ transaction PackageHistoryQuery {
 }
 
 transaction PackageLostReport {
-  --> Package package
-  --> ShipmentVehicle shipmentVehicle
+  --> Package[] packages
+  --> ShipmentVehicle vehicle
 }
 
 /* Event */
