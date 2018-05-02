@@ -13,7 +13,7 @@ export class ShipmentDeliverService {
     public async postShipmentDeliver(packageBarcode: string, signature: string) {
         const shipmentDeliver = {
             $class: this.NAMESPACE,
-            vehicle: 'toyotaTruck',
+            vehicle: 'yamahaTruck',
             package: `resource:org.bitship.Package#${packageBarcode}`,
             signature,
         }
