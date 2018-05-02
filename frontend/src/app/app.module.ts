@@ -18,6 +18,9 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ScanQRCodeComponent } from './components/scannerQrCode/scannerQrCode.component';
 import { DeliverPackageComponent } from './screens/shipmentVehicle/delivers/deliverPackage.component';
 
+import { NbThemeModule } from '@nebular/theme';
+import { RouterModule } from '@angular/router'; // we also need angular router for Nebular to function properly
+import { NbSidebarModule, NbLayoutModule, NbSidebarService } from '@nebular/theme';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,10 +41,15 @@ import { DeliverPackageComponent } from './screens/shipmentVehicle/delivers/deli
     HttpModule,
     ZXingScannerModule.forRoot(),
     WebcamModule,
+    NbThemeModule.forRoot({ name: 'default' }),
+    RouterModule, // RouterModule.forRoot(routes, { useHash: true }), if this is your app.module
+    NbLayoutModule,
+    NbSidebarModule,
   ],
   providers: [
     Configuration,
-    DataService
+    DataService,
+    NbSidebarService
   ],
   bootstrap: [AppComponent]
 })

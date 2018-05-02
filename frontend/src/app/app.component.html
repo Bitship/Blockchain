@@ -1,4 +1,79 @@
-<br>
+<nb-layout>
+    <nb-layout-header fixed>Wellcome To Blockchain Project</nb-layout-header>
+
+    <nb-sidebar>
+        <div class="pos-f-t">
+                        <nav class="navbar navbar-light bg-light">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </nav>
+            <div class="collapse" id="navbarToggleExternalContent">
+                <div class="bg-dark">
+                    <div class="row">
+                        <div class="col-md-12">
+                                <h2 class="text-white text-center" style="padding-top: 50px; padding-bottom: 15px">Blockchain</h2>
+                                <div class="btn-group-vertical">
+            
+                                    <div class="menu-sidebar" style="margin-left: 8px; width: 200px" tag="menu-sidebar" responsive>
+                                        <a href="https://github.com/BitShip/BitShip" target="_blank" class="btn btn-hero-success main-btn">
+                                            <i class="ion ion-social-github"></i>
+                                            <h5>About Us</h5>
+                                        </a>
+                                    </div>
+                                    <div style="align-self: auto; padding-bottom:100px">
+                                        <ul class="menu1">
+                                            <li><a class="" [routerLink]="['sender']">
+                                                    <i class="fas fa-user-circle"></i>
+                                                    Sender
+                                                </a></li>
+                                            <li><a class="" [routerLink]="['inspector']">
+                                                    <i class="fas fa-barcode"></i>
+                                                    Inspector
+                                                </a></li>
+                                            <li><a class="" [routerLink]="['shipmentCompany']">
+                                                    <i class="fas fa-truck"></i>
+                                                    ShipmentCompany
+                                                </a></li>
+                                                <li class="dropdown show">
+                                                    <a href="#" role="button" id="dropdownShipmentVehicle" data-toggle="dropdown"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        ShipmentVehicle
+                                                        <i class="fas fa-caret-down"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu bg-dark menu2" aria-labelledby="dropdownShipmentVehicle">
+                                                        <li><a class="dropdown-item" [routerLink]="['shipmentVehicle', 'toyotaTruck']">Toyota Truck</a></li>
+                                                        <li><a class="dropdown-item" [routerLink]="['shipmentVehicle', 'yamahaTruck']">Yamaha Truck</a></li>
+                                                    </ul>
+                                                </li>
+                                                
+                                        </ul>
+                                        <!-- <div class="dropdown show">
+                                            <a class="btn btn-secondary btn-sm dropdown-toggle text-white" href="#" role="button" id="dropdownShipmentVehicle" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                ShipmentVehicle
+                                            </a>
+                                            <div class="dropdown-menu bg-dark text-white" aria-labelledby="dropdownShipmentVehicle">
+                                                <a class="dropdown-item" [routerLink]="['shipmentVehicle', 'toyotaTruck']">Toyota Truck</a>
+                                                <a class="dropdown-item" [routerLink]="['shipmentVehicle', 'yamahaTruck']">Yamaha Truck</a>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nb-sidebar>
+
+    <nb-layout-column>
+        <router-outlet></router-outlet>
+    </nb-layout-column>
+</nb-layout>
+
+<!-- <br>
 <div class="container-fluid form-group">
     <div style="float: right">
         <a class="btn btn-primary" [routerLink]="['sender']">Sender</a>
@@ -9,4 +84,4 @@
         
     </div>
     <router-outlet></router-outlet>
-</div>
+</div> -->

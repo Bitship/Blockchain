@@ -1,0 +1,10 @@
+.menu1 li {
+    list-style: none;
+    line-height: 50px;
+    font-weight: bold;
+    font-size: 18px;
+}
+.menu1 ul.menu2 li {
+    list-style: none;
+    line-height: 20px;
+}
